@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ATAG - Coletor Industrial</title>
+    <title>ATAG - Gestão de Cargas & Transportes</title>
     
-    <!-- PWA & Mobile Settings -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#0F172A">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="ATAG Coletor">
+    <meta name="apple-mobile-web-app-title" content="ATAG Cargas">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -19,8 +18,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- HTML5-QRCode Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -52,1215 +49,1704 @@
             -webkit-tap-highlight-color: transparent;
             position: relative;
             min-height: 100vh;
-            overflow-x: hidden;
         }
-
-        .selectable-text {
-            user-select: text !important;
-            -webkit-user-select: text !important;
-        }
-
-        /* LUZ RADIAL INDUSTRIAL DE FUNDO */
-        body::after {
-            content: "";
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90vw; height: 90vh;
-            max-width: 900px; max-height: 900px;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.06) 0%, rgba(229, 62, 62, 0.04) 45%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
         body::before {
             content: "";
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
             background-image: url('atag_logo.png');
             background-repeat: no-repeat;
-            background-position: center center;
-            background-size: contain; 
-            opacity: 0.05;
+            background-position: 65% center;
+            background-size: 55% auto; 
+            opacity: 0.06;
             pointer-events: none;
             z-index: 0;
         }
-
-        /* GLASSMORPHISM COM BORDA DE LUZ SUPERIOR */
         .glass-card {
-            background-color: rgba(30, 41, 59, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background-color: rgba(30, 41, 59, 0.88);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             position: relative;
             z-index: 10;
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
         .atag-logo-glow { filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.25)); }
-
         input:focus, textarea:focus, select:focus {
             border-color: #38BDF8 !important;
-            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25), 0 0 12px rgba(56, 189, 248, 0.2) !important;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25) !important;
             outline: none;
-            transform: scale(1.005);
-            transition: all 0.15s ease-in-out;
+            transition: all 0.1s ease-in-out;
         }
-
-        .input-success {
-            border-color: #22C55E !important;
-            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25) !important;
-        }
-
-        .input-warning {
-            border-color: #F59E0B !important;
-            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25) !important;
-        }
-
-        .btn-salvo-sucesso {
-            background-color: #22C55E !important;
-            box-shadow: 0 0 25px rgba(34, 197, 94, 0.6) !important;
-            transform: scale(0.98);
-        }
-
-        /* ANIMAÇÕES DE ENTRADA ESCALONADA */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-header { animation: fadeInUp 0.4s ease-out forwards; }
-        .animate-bloco-1 { animation: fadeInUp 0.5s ease-out 0.1s forwards; opacity: 0; }
-        .animate-bloco-2 { animation: fadeInUp 0.5s ease-out 0.15s forwards; opacity: 0; }
-        .animate-bloco-3 { animation: fadeInUp 0.5s ease-out 0.2s forwards; opacity: 0; }
-        .animate-bloco-4 { animation: fadeInUp 0.5s ease-out 0.25s forwards; opacity: 0; }
-        .animate-estoque { animation: fadeInUp 0.6s ease-out 0.2s forwards; opacity: 0; }
-
-        /* TRANSIÇÃO FLUIDA PARA ACORDEÃO */
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s ease;
-        }
-        .accordion-content.expanded {
-            max-height: 2000px;
-        }
-
-        #interactive video, #qr-reader video, #video-foto-memoria {
-            object-fit: cover !important;
-            width: 100% !important;
-            height: 100% !important;
-            border-radius: 0.75rem;
-        }
-
-        .laser-line {
-            position: absolute;
-            top: 50%; left: 5%; right: 5%;
-            height: 2px;
-            background: linear-gradient(90deg, rgba(229,62,62,0.1) 0%, rgba(239,68,68,1) 50%, rgba(229,62,62,0.1) 100%);
-            box-shadow: 0 0 12px #EF4444, 0 0 4px #EF4444;
-            z-index: 10;
-            animation: scanLine 2s infinite ease-in-out;
-        }
-
-        @keyframes scanLine {
-            0%, 100% { transform: translateY(-45px); opacity: 0.4; }
-            50% { transform: translateY(45px); opacity: 1; }
-        }
-
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #0F172A; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
 
-        #qr-reader { border: none !important; background: black; border-radius: 0.75rem; overflow: hidden; }
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 8mm 12mm 12mm 12mm;
+                @bottom-right {
+                    content: counter(page) " / " counter(pages);
+                    font-size: 9px;
+                    font-family: 'Inter', sans-serif;
+                }
+            }
+
+            body { 
+                background: white !important; 
+                color: black !important; 
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body::before { display: none !important; }
+            header, footer, .no-print, .glass-card:not(#relatorio-a4-container) { display: none !important; }
+            
+            #modal-relatorio-a4 {
+                position: static !important;
+                background: white !important;
+                display: block !important;
+                padding: 0 !important;
+                overflow: visible !important;
+            }
+
+            #relatorio-a4-container {
+                display: block !important;
+                position: static !important;
+                width: 100% !important;
+                min-height: auto !important;
+                background: white !important;
+                color: black !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            thead tr {
+                background-color: #1e293b !important;
+                color: #ffffff !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            thead th {
+                color: #ffffff !important;
+                background-color: #1e293b !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            thead { display: table-header-group !important; }
+            tr { break-inside: avoid; page-break-inside: avoid; }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between antialiased relative z-10">
 
-    <!-- HEADER STATUS BAR -->
-    <header class="glass-card border-b border-atag-border p-3 px-4 sticky top-0 z-30 shadow-xl animate-header">
-        <div class="max-w-md lg:max-w-7xl mx-auto flex justify-between items-center">
+    <!-- HEADER -->
+    <header class="glass-card border-b border-atag-border p-3 px-4 sticky top-0 z-40 shadow-xl flex flex-col lg:flex-row justify-between items-center gap-3 no-print">
+        <div class="flex items-center justify-between w-full lg:w-auto">
             <div class="flex items-center gap-3">
-                <button onclick="voltarModulos()" title="Escolha de Módulos" class="bg-slate-800 hover:bg-slate-700 text-atag-accent border border-slate-700 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95 shadow">
-                    <i class="fa-solid fa-arrow-left text-sm"></i>
+                <a href="./index.html" class="bg-slate-800 hover:bg-slate-700 text-atag-accent border border-slate-700 px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 transition-all active:scale-95 shadow">
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
                     <span class="hidden sm:inline">Módulos</span>
-                </button>
-
-                <img src="atag_logo.png" alt="Logo ATAG" class="h-8 w-auto atag-logo-glow">
+                </a>
+                <img src="atag_logo.png" alt="Logo ATAG" class="h-8 w-auto atag-logo-glow rounded object-contain">
                 <div>
-                    <h1 class="text-xs font-bold text-gray-200 uppercase tracking-wider leading-none">Coletor Industrial</h1>
-                    <p class="text-[10px] text-gray-400 font-medium">Dourados - MS</p>
+                    <h1 class="text-xs font-black text-gray-100 uppercase tracking-wide leading-none">Gestão de Cargas & Transportes</h1>
+                    <p class="text-[10px] text-gray-400 font-medium">ATAG Auto Peças <span class="text-atag-accent">| Admin Completo</span></p>
                 </div>
             </div>
 
-            <div class="flex items-center gap-3">
-                <div class="hidden lg:flex items-center gap-2 text-[11px] text-gray-400 bg-slate-900 px-3 py-1 rounded-lg border border-slate-800">
-                    <span>Atalhos: <kbd class="bg-slate-800 text-atag-accent px-1.5 py-0.5 rounded font-mono font-bold">F2</kbd> Bipe | <kbd class="bg-slate-800 text-atag-accent px-1.5 py-0.5 rounded font-mono font-bold">ENTER</kbd> Salvar</span>
-                </div>
-                <div id="status-badge" class="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs px-2.5 py-1 rounded-full font-semibold">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span id="status-text">ONLINE</span>
-                </div>
+            <div id="status-badge" class="lg:hidden flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] px-2.5 py-1 rounded-full font-semibold">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="status-text-mob">ONLINE</span>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800">
+            <button onclick="mudarAba('cargas')" id="nav-desk-cargas" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-atag-accent/20 text-atag-accent border border-atag-accent/40"><i class="fa-solid fa-truck-fast mr-1"></i> Cargas</button>
+            <button onclick="mudarAba('historico')" id="nav-desk-historico" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-gray-400 hover:text-white"><i class="fa-solid fa-clipboard-check mr-1"></i> Histórico</button>
+            <button onclick="mudarAba('transp')" id="nav-desk-transp" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-gray-400 hover:text-white"><i class="fa-solid fa-address-book mr-1"></i> Transportadoras</button>
+        </div>
+
+        <div class="hidden lg:flex items-center gap-2.5">
+            <button onclick="filtrarPorEstatistica('transito')" class="bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/50 px-3 py-1 rounded-lg text-center flex items-center gap-2 transition-all cursor-pointer" title="Filtrar Em Trânsito">
+                <span class="text-[10px] font-bold text-gray-400 uppercase">Trânsito:</span>
+                <span id="stat-transito" class="text-xs font-black text-amber-400">0</span>
+            </button>
+            <button onclick="filtrarPorEstatistica('pendentes')" class="bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-red-500/50 px-3 py-1 rounded-lg text-center flex items-center gap-2 transition-all cursor-pointer" title="Filtrar Pendentes/Atrasadas">
+                <span class="text-[10px] font-bold text-gray-400 uppercase">Pendentes:</span>
+                <span id="stat-pendentes" class="text-xs font-black text-atag-red">0</span>
+            </button>
+            <button onclick="filtrarPorEstatistica('entregues')" class="bg-slate-900/80 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/50 px-3 py-1 rounded-lg text-center flex items-center gap-2 transition-all cursor-pointer" title="Ir para Histórico (Entregues)">
+                <span class="text-[10px] font-bold text-gray-400 uppercase">Entregues:</span>
+                <span id="stat-entregues" class="text-xs font-black text-emerald-400">0</span>
+            </button>
+            <div id="status-badge-desk" class="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs px-3 py-1.5 rounded-full font-semibold ml-1">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="status-text">ONLINE</span>
             </div>
         </div>
     </header>
 
     <!-- MAIN CONTAINER -->
-    <main class="flex-1 max-w-md lg:max-w-7xl w-full mx-auto p-4 pb-20 lg:pb-4 flex flex-col gap-4 relative z-10">
+    <main class="flex-1 max-w-md lg:max-w-7xl w-full mx-auto p-3 pb-20 lg:pb-4 flex flex-col gap-3 relative z-10">
 
-        <div class="lg:grid lg:grid-cols-12 lg:gap-6 lg:items-start">
+        <section id="view-cargas" class="flex flex-col gap-3">
+            <div class="lg:grid lg:grid-cols-12 lg:gap-4 lg:items-start">
 
-            <!-- COLUNA ESQUERDA: FORMULÁRIO DE COLETA (4 colunas) -->
-            <section id="view-coletar" class="lg:col-span-4 flex flex-col gap-4">
-                
-                <!-- BLOCO 1: CÓDIGO DE BARRAS -->
-                <div class="glass-card border border-slate-700/80 rounded-xl p-3.5 shadow-xl flex flex-col gap-2.5 animate-bloco-1">
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block flex justify-between items-center">
-                        <span class="flex items-center gap-1.5">1. Código de Barras / SKU <span class="text-[9px] font-mono bg-slate-900 border border-slate-700 text-atag-accent px-1.5 py-0.2 rounded">[F2]</span></span>
-                        <i class="fa-solid fa-barcode text-atag-accent text-sm"></i>
-                    </label>
-
-                    <div class="flex gap-2">
-                        <div class="relative flex-1">
-                            <input type="text" id="input-codigo" placeholder="Bipe ou digite..." autofocus
-                                class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-3 pr-8 py-2.5 font-mono font-bold text-sm text-white transition-all uppercase">
-                            <button id="btn-clear-code" onclick="limparCodigo()" class="hidden absolute right-2.5 top-2.5 text-gray-400 hover:text-white">
-                                <i class="fa-solid fa-circle-xmark"></i>
-                            </button>
+                <!-- COLUNA ESQUERDA: FORMULÁRIO -->
+                <div id="coluna-formulario" class="lg:col-span-4 flex flex-col gap-3 mb-3 lg:mb-0 lg:sticky lg:top-24 z-20 no-print">
+                    <div class="glass-card border border-atag-border rounded-xl p-3.5 shadow-xl flex flex-col gap-2.5 max-h-[calc(100vh-120px)] overflow-y-auto">
+                        <div class="flex justify-between items-center border-b border-slate-700/60 pb-1.5">
+                            <h3 id="form-titulo" class="text-xs font-extrabold text-white uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-square-plus text-atag-accent"></i>
+                                Registrar Carga
+                            </h3>
+                            <span id="form-badge" class="text-[9px] bg-atag-accent/20 text-atag-accent px-1.5 py-0.5 rounded font-bold">NOVO</span>
                         </div>
-                        <button onclick="abrirModalCamera()" class="bg-atag-accent/20 border border-atag-accent/50 text-atag-accent hover:bg-atag-accent/30 px-3.5 rounded-lg font-bold flex items-center justify-center gap-1.5 active:scale-95 transition-all">
-                            <i class="fa-solid fa-camera text-base"></i>
-                            <span class="text-xs uppercase hidden sm:inline">Câmara</span>
-                        </button>
-                    </div>
 
-                    <div id="alert-sku" class="hidden p-2 rounded-lg text-xs font-medium flex items-start gap-2 border"></div>
-                </div>
+                        <input type="hidden" id="reg-id-edicao" value="">
 
-                <!-- BLOCO 2: ENDEREÇAMENTO -->
-                <div class="glass-card border border-slate-700/80 rounded-xl p-3.5 shadow-xl animate-bloco-2">
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 block flex justify-between items-center">
-                        <span>2. Endereçamento</span>
-                        <span id="locacao-completa" class="text-atag-accent font-extrabold text-sm">R00-000</span>
-                    </label>
-                    
-                    <div class="grid grid-cols-2 gap-2.5">
-                        <div>
-                            <span class="text-[10px] text-gray-400 mb-1 block font-medium">Rua (Ex: R01)</span>
-                            <div class="relative">
-                                <input type="text" id="input-rua" placeholder="R01" maxlength="3" 
-                                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-center font-bold text-base text-white uppercase transition-all">
+                        <div class="flex flex-col gap-2.5">
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase">NF / Nº Pedido *</label>
+                                <input type="text" id="reg-nf" placeholder="EX: 45892" class="form-input w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white uppercase mt-0.5 font-mono font-bold">
+                            </div>
+
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase">Origem / Fornecedor *</label>
+                                <input type="text" id="reg-origem" onblur="preencherDadosPorFornecedor()" placeholder="EX: SCHADEK, NGK..." class="form-input w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white uppercase mt-0.5 font-bold">
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <div>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase block mb-0.5">Destinatário *</label>
+                                    <select id="reg-cnpj" onchange="preencherDadosPorFornecedor()" class="form-input w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-[11px] font-bold text-atag-accent">
+                                        <option value="09.253.819/0001-35">Matriz (Dourados)</option>
+                                        <option value="09.253.819/0002-16">Filial (Campo Grande)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between items-center mb-0.5">
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase">Transportadora *</label>
+                                        <button onclick="mudarAba('transp')" class="text-[9px] text-atag-accent hover:underline">+ Nova</button>
+                                    </div>
+                                    <select id="reg-transp" onchange="preencherDadosTransportadora()" class="form-input w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-[11px] font-bold text-white">
+                                        <option value="">Selecione...</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-1.5 bg-slate-900/60 p-2 rounded-lg border border-slate-800 text-[10px]">
+                                <div>
+                                    <span class="text-gray-400 font-semibold block uppercase">Site Rastreio</span>
+                                    <input type="text" id="reg-site" placeholder="URL..." class="w-full bg-slate-950 border border-slate-800 rounded p-1 text-[10px] text-white mt-0.5">
+                                </div>
+                                <div>
+                                    <span class="text-gray-400 font-semibold block uppercase">Telefone</span>
+                                    <input type="text" id="reg-fone" placeholder="Tel..." class="w-full bg-slate-950 border border-slate-800 rounded p-1 text-[10px] text-white mt-0.5">
+                                </div>
+                                <div>
+                                    <span class="text-gray-400 font-semibold block uppercase">WhatsApp</span>
+                                    <input type="text" id="reg-whats" placeholder="Whats..." class="w-full bg-slate-950 border border-slate-800 rounded p-1 text-[10px] text-white mt-0.5">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase">Previsão Entrega</label>
+                                    <input type="date" id="reg-previsao" onchange="calcularStatusAutomaticoFormulario()" class="form-input w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-xs text-white mt-0.5">
+                                </div>
+                                <div>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase">Status</label>
+                                    <select id="reg-status" class="form-input w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-xs font-bold text-amber-400 mt-0.5">
+                                        <option value="EM TRÂNSITO">Em Trânsito</option>
+                                        <option value="PENDENTE / ATRASADA">Pendente / Atrasada</option>
+                                        <option value="ENTREGUE">Entregue</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="text-[10px] font-bold text-gray-400 uppercase">Observações</label>
+                                <textarea id="reg-obs" rows="1" placeholder="Obs..." class="form-input w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-xs text-white mt-0.5 resize-none"></textarea>
+                            </div>
+
+                            <div class="flex gap-2 mt-0.5">
+                                <button id="btn-salvar-carga" onclick="salvarNovaCarga()" class="flex-1 bg-atag-red hover:bg-atag-redDark text-white py-2.5 rounded-xl font-extrabold text-xs uppercase tracking-wider shadow-lg active:scale-95 transition-all">
+                                    <i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Carga
+                                </button>
+                                <button id="btn-cancelar-edicao" onclick="limparFormularioCarga()" class="hidden bg-slate-700 hover:bg-slate-600 text-white px-3 py-2.5 rounded-xl font-bold text-xs uppercase transition-all">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
                             </div>
                         </div>
-                        <div>
-                            <span class="text-[10px] text-gray-400 mb-1 block font-medium">Posição (001-2000)</span>
-                            <div class="relative">
-                                <input type="text" id="input-posicao" placeholder="001" inputmode="numeric" maxlength="4"
-                                    class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-center font-bold text-base text-white uppercase transition-all">
+                    </div>
+                </div>
+
+                <!-- COLUNA LISTAGEM -->
+                <div id="coluna-lista" class="lg:col-span-8 flex flex-col gap-2">
+                    <div class="glass-card border border-atag-border rounded-xl p-2.5 shadow-2xl flex flex-col gap-2 sticky top-[72px] lg:top-[76px] z-30 no-print backdrop-blur-md bg-slate-900/95">
+                        <div class="flex items-center justify-between gap-2 flex-wrap">
+                            <div class="flex items-center gap-2 flex-1 min-w-[180px]">
+                                <i class="fa-solid fa-magnifying-glass text-atag-accent text-xs"></i>
+                                <input type="text" id="search-cargas" oninput="renderizarCargas()" placeholder="Buscar por NF, Transportadora, Origem..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                            </div>
+                            
+                            <div class="flex items-center gap-1.5">
+                                <select id="filtro-transportadora" onchange="renderizarCargas()" class="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs font-bold text-atag-accent max-w-[150px] truncate" title="Filtrar por Transportadora">
+                                    <option value="TODAS">Todas Transportadoras</option>
+                                </select>
+                                <button onclick="copiarMensagemWhatsAppTransportadora()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 shadow" title="Gerar e copiar mensagem de cobrança WhatsApp">
+                                    <i class="fa-brands fa-whatsapp text-sm"></i> <span class="hidden sm:inline">Cobrar</span>
+                                </button>
+                            </div>
+
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                <button onclick="abrirModalImportacaoLote()" class="bg-sky-600 hover:bg-sky-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 shadow transition-all active:scale-95" title="Importar Lote de Notas Fiscais e Fornecedores">
+                                    <i class="fa-solid fa-file-import text-sm"></i> <span class="hidden sm:inline">Importar Lote</span>
+                                </button>
+
+                                <select id="select-filtro-status" onchange="renderizarCargas()" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs font-bold text-atag-accent">
+                                    <option value="TODAS">STATUS</option>
+                                    <option value="EM TRÂNSITO">TRÂNSITO</option>
+                                    <option value="PENDENTE / ATRASADA">PENDENTES</option>
+                                    <option value="SEM_DADOS">SEM DADOS (AGRUPADO)</option>
+                                </select>
+                                <button onclick="apagarSelecionadas()" class="bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/30 px-2 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 shadow" title="Excluir marcadas">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                                <button onclick="abrirRelatorioImpressao(false)" class="bg-sky-600 hover:bg-sky-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 shadow" title="Gerar Relatório para Impressão">
+                                    <i class="fa-solid fa-print"></i>
+                                </button>
+                                
+                                <button onclick="window.open('https://meudanfe.com.br/', 'MeuDanfeWindow', 'width=1200,height=800,scrollbars=yes,resizable=yes')" class="bg-sky-600 hover:bg-sky-500 text-white px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow transition-all active:scale-95" title="Consultar Nota Fiscal no Meu Danfe">
+                                    <img src="https://meudanfe.com.br/favicon.ico" alt="Logo Meu Danfe" class="w-3.5 h-3.5 rounded-sm object-contain bg-white p-0.5">
+                                    <span class="hidden sm:inline">MeuDanfe</span>
+                                </button>
                             </div>
                         </div>
-                    </div>
-
-                    <div id="alert-locacao" class="hidden mt-2.5 p-2 rounded-lg text-xs font-medium flex items-center gap-2 border"></div>
-                </div>
-
-                <!-- BLOCO 3: OPCIONAIS -->
-                <div class="glass-card border border-slate-700/80 rounded-xl p-3.5 shadow-xl flex flex-col gap-2.5 animate-bloco-3">
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider block">3. Opcionais (Foto & Obs)</label>
-
-                    <div class="grid grid-cols-2 gap-2.5">
-                        <div class="relative">
-                            <button type="button" onclick="abrirCapturaFotoRAM('coleta')" id="btn-foto-trigger" class="w-full h-full min-h-[60px] bg-slate-900 border border-dashed border-slate-700 hover:border-atag-accent rounded-lg p-2 flex flex-col items-center justify-center gap-1 transition-all">
-                                <i class="fa-solid fa-camera-retro text-gray-400 text-base" id="icon-foto"></i>
-                                <span class="text-[10px] font-medium text-gray-300 text-center" id="text-foto">Anexar Foto</span>
-                            </button>
-                        </div>
-
-                        <div id="container-preview-foto" class="relative hidden bg-slate-900 rounded-lg border border-slate-700 overflow-hidden flex items-center justify-center">
-                            <img id="img-preview" class="h-16 w-full object-cover" src="" alt="Preview">
-                            <button type="button" onclick="removerFoto()" class="absolute top-1 right-1 bg-red-600/80 hover:bg-red-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px]">
-                                <i class="fa-solid fa-xmark"></i>
-                            </button>
-                        </div>
-
-                        <div class="col-span-1">
-                            <textarea id="input-obs" rows="2" placeholder="Observações..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white placeholder-gray-500 resize-none h-full"></textarea>
+                        <div class="flex justify-between items-center text-[10px] text-gray-400 border-t border-slate-700/50 pt-1 font-medium">
+                            <span>REGISTROS ATIVOS</span>
+                            <span id="total-cargas-contador" class="text-atag-accent font-bold">0 CARGAS</span>
                         </div>
                     </div>
-                </div>
 
-                <!-- BLOCO 4: BOTÃO SALVAR DESKTOP COM BADGE DE TECLADO -->
-                <div class="hidden lg:block animate-bloco-4">
-                    <button onclick="salvarColeta()" id="btn-salvar-desktop" class="w-full py-3 rounded-xl font-extrabold text-xs flex items-center justify-center gap-2 bg-atag-red hover:bg-atag-redDark text-white shadow-xl active:scale-95 transition-all uppercase tracking-wider">
-                        <i class="fa-solid fa-floppy-disk text-base" id="icon-btn-salvar-desktop"></i>
-                        <span id="text-btn-salvar-desktop">Salvar Lançamento</span>
-                        <span class="text-[10px] font-mono bg-black/30 px-1.5 py-0.5 rounded border border-white/20">[Enter]</span>
+                    <div id="lista-cargas" class="flex flex-col gap-2 mt-2">
+                        <!-- Injetado Dinamicamente -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MÓDULO: HISTÓRICO -->
+        <section id="view-historico" class="hidden flex-col gap-3">
+            <div class="glass-card border border-atag-border rounded-xl p-3 shadow-2xl flex flex-col gap-2.5 sticky top-[72px] lg:top-[76px] z-30 no-print backdrop-blur-md bg-slate-900/95">
+                <div class="flex items-center justify-between gap-2 flex-wrap">
+                    <div class="flex items-center gap-2 flex-1">
+                        <i class="fa-solid fa-magnifying-glass text-emerald-400 text-xs"></i>
+                        <input type="text" id="search-historico" oninput="renderizarHistorico()" placeholder="Buscar no histórico..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white">
+                    </div>
+                    <button onclick="abrirRelatorioImpressao(true)" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 shadow">
+                        <i class="fa-solid fa-print mr-1"></i> Relatório A4 (Histórico)
                     </button>
                 </div>
-
-            </section>
-
-            <!-- COLUNA DIREITA: ESTOQUE EM TEMPO REAL AMPLIADA (8 colunas) -->
-            <section id="view-estoque" class="lg:col-span-8 flex flex-col gap-3 mt-4 lg:mt-0 animate-estoque">
-                <div class="glass-card border border-slate-700/80 rounded-xl p-3.5 shadow-xl flex flex-col gap-3">
-                    
-                    <div class="flex items-center justify-between gap-2">
-                        <div class="flex items-center gap-2">
-                            <i class="fa-solid fa-boxes-stacked text-atag-accent"></i>
-                            <span class="text-xs font-bold text-gray-200 uppercase tracking-wider">Consulta em Tempo Real por Ruas</span>
-                        </div>
-                        
-                        <button onclick="exportarRelatorioCSV()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow transition-all active:scale-95 flex-shrink-0">
-                            <i class="fa-solid fa-file-excel text-sm"></i>
-                            <span>Exportar Relatório</span>
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-700/50">
-                        <button onclick="toggleModoVisao()" id="btn-modo-visao" class="bg-slate-900 hover:bg-slate-800 border border-slate-700 text-gray-300 px-3 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all">
-                            <i class="fa-solid fa-grip-lines text-atag-accent"></i>
-                            <span id="text-modo-visao">Compacto</span>
-                        </button>
-
-                        <select id="select-filtro-rua" onchange="renderizarEstoque()" class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs font-bold text-atag-accent text-center">
-                            <option value="TODAS">TODAS AS RUAS</option>
-                        </select>
-                    </div>
-
-                    <div class="flex justify-between items-center text-[11px] text-gray-400 border-t border-slate-700/50 pt-2 font-medium">
-                        <span>LISTAGEM GERAL DE ITENS</span>
-                        <span id="total-itens-contador" class="text-atag-accent font-black bg-slate-900 px-2.5 py-0.5 rounded-full border border-slate-800 transition-all">0 ITENS</span>
-                    </div>
+                <div class="flex justify-between items-center text-[10px] text-gray-400 border-t border-slate-700/50 pt-1.5 font-medium">
+                    <span>CARGAS JÁ ENTREGUES</span>
+                    <span id="total-historico-contador" class="text-emerald-400 font-bold">0 ENTREGUES</span>
                 </div>
+            </div>
 
-                <!-- LISTA DE ITENS (DIRETA OU POR RUAS SE FILTRADO) -->
-                <div id="lista-estoque" class="flex flex-col gap-2.5 pb-20 lg:pb-0 lg:max-h-[calc(100vh-200px)] lg:overflow-y-auto lg:pr-1"></div>
-            </section>
+            <div id="lista-historico" class="flex flex-col gap-2 mt-2">
+                <!-- Injetado Dinamicamente -->
+            </div>
+        </section>
 
-        </div>
+        <!-- MÓDULO: TRANSPORTADORAS -->
+        <section id="view-transp" class="hidden flex-col gap-3">
+            <div class="glass-card border border-atag-border rounded-xl p-3.5 shadow-xl flex flex-col gap-2.5">
+                <div class="flex justify-between items-center border-b border-slate-700 pb-1.5">
+                    <h3 class="text-xs font-bold text-white uppercase"><i class="fa-solid fa-truck text-atag-accent mr-1"></i> Cadastrar Nova Transportadora</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                    <input type="text" id="transp-nome" placeholder="Nome..." class="bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white uppercase font-bold">
+                    <input type="text" id="transp-site" placeholder="Site de Rastreio..." class="bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white">
+                    <input type="text" id="transp-fone" placeholder="Telefone..." class="bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white">
+                    <input type="text" id="transp-whats" placeholder="WhatsApp..." class="bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white">
+                </div>
+                <button onclick="salvarTransportadora()" class="bg-atag-accent hover:bg-sky-400 text-slate-950 py-2 rounded-lg font-black text-xs uppercase shadow transition-all">Salvar Transportadora</button>
+            </div>
+
+            <div id="lista-transp" class="flex flex-col gap-2">
+                <!-- Injetado Dinamicamente -->
+            </div>
+        </section>
 
     </main>
 
-    <!-- FOOTER NAV BAR (MOBILE) -->
-    <footer class="lg:hidden glass-card border-t border-atag-border p-2 fixed bottom-0 left-0 right-0 z-30 shadow-2xl">
-        <div class="max-w-md mx-auto grid grid-cols-3 gap-2">
-            <button onclick="mudarAba('coletar')" id="nav-coletar" class="py-2.5 rounded-xl font-bold text-xs flex flex-col items-center gap-1 bg-slate-800 text-atag-accent border border-atag-accent/40 shadow">
-                <i class="fa-solid fa-qrcode text-base"></i>
-                <span>COLETOR</span>
+    <!-- FOOTER MOBILE -->
+    <footer class="lg:hidden glass-card border-t border-atag-border p-1.5 fixed bottom-0 left-0 right-0 z-30 shadow-2xl no-print">
+        <div class="max-w-md mx-auto grid grid-cols-3 gap-1">
+            <button onclick="mudarAba('cargas')" id="nav-mob-cargas" class="py-2 rounded-xl font-bold text-[10px] flex flex-col items-center gap-0.5 bg-slate-800 text-atag-accent border border-atag-accent/40">
+                <i class="fa-solid fa-truck-fast text-xs"></i>
+                <span>CARGAS</span>
             </button>
-            <button onclick="salvarColeta()" id="btn-salvar" class="py-2.5 rounded-xl font-extrabold text-xs flex flex-col items-center gap-1 bg-atag-red hover:bg-atag-redDark text-white shadow-lg active:scale-95 transition-all">
-                <i class="fa-solid fa-floppy-disk text-base" id="icon-btn-salvar-mobile"></i>
-                <span id="text-btn-salvar-mobile">SALVAR</span>
+            <button onclick="mudarAba('historico')" id="nav-mob-historico" class="py-2 rounded-xl font-bold text-[10px] flex flex-col items-center gap-0.5 text-gray-400 hover:bg-slate-800/50">
+                <i class="fa-solid fa-clipboard-check text-xs"></i>
+                <span>HISTÓRICO</span>
             </button>
-            <button onclick="mudarAba('estoque')" id="nav-estoque" class="py-2.5 rounded-xl font-bold text-xs flex flex-col items-center gap-1 text-gray-400 hover:bg-slate-800/50 transition-all relative">
-                <i class="fa-solid fa-boxes-stacked text-base"></i>
-                <span>ESTOQUE</span>
-                <span id="badge-estoque-count" class="absolute top-1 right-4 bg-atag-accent text-slate-950 font-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center">0</span>
+            <button onclick="mudarAba('transp')" id="nav-mob-transp" class="py-2 rounded-xl font-bold text-[10px] flex flex-col items-center gap-0.5 text-gray-400 hover:bg-slate-800/50">
+                <i class="fa-solid fa-address-book text-xs"></i>
+                <span>TRANSP.</span>
             </button>
         </div>
     </footer>
 
-    <!-- MODAL CAMERA SCANNER -->
-    <div id="modal-camera" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex flex-col justify-between p-4">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-            <div class="flex items-center gap-2">
-                <i class="fa-solid fa-barcode text-atag-accent text-lg"></i>
-                <span class="font-bold text-sm text-white uppercase tracking-wider">Leitor por Câmara</span>
-            </div>
-            <button onclick="fecharModalCamera()" class="bg-slate-800 hover:bg-slate-700 text-gray-300 w-9 h-9 rounded-full flex items-center justify-center">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-        </div>
+    <!-- MODAL RELATÓRIO A4 -->
+    <div id="modal-relatorio-a4" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[999] hidden flex flex-col items-center justify-start p-2 sm:p-6 overflow-y-auto">
+        <div class="w-full max-w-4xl bg-slate-900 border border-slate-700 rounded-xl p-4 shadow-2xl mb-4 flex justify-between items-center no-print flex-wrap gap-2">
+            <h3 class="text-sm font-black text-white uppercase"><i class="fa-solid fa-file-pdf text-atag-accent mr-2"></i> Relatório A4</h3>
+            
+            <div class="flex items-center gap-2 flex-wrap">
+                <select id="filtro-relatorio-filial" onchange="atualizarVisualizacaoRelatorioA4()" class="bg-slate-800 text-white text-xs px-2.5 py-1.5 rounded-lg border border-slate-700 font-bold">
+                    <option value="TODAS">Todas as Filiais</option>
+                    <option value="09.253.819/0001-35">Matriz (Dourados)</option>
+                    <option value="09.253.819/0002-16">Filial (Campo Grande)</option>
+                </select>
 
-        <div class="relative my-auto w-full max-w-sm mx-auto aspect-square bg-black rounded-2xl border-2 border-atag-accent/40 overflow-hidden shadow-2xl flex items-center justify-center">
-            <div id="qr-reader" class="w-full h-full"></div>
-            <div class="laser-line"></div>
-        </div>
-
-        <div class="flex flex-col gap-3 glass-card border border-atag-border p-3.5 rounded-xl max-w-sm mx-auto w-full">
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex items-center gap-2 flex-1">
-                    <i class="fa-solid fa-video text-atag-accent text-xs"></i>
-                    <select id="select-camera" onchange="trocarCamera(this.value)" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs font-bold text-white">
-                        <option value="">Carregando Câmeras...</option>
-                    </select>
+                <div class="flex items-center gap-1 bg-slate-800 p-1 rounded-lg border border-slate-700 text-xs">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase px-1">De:</span>
+                    <input type="date" id="filtro-relatorio-data-inicio" onchange="atualizarVisualizacaoRelatorioA4()" class="bg-slate-900 text-white text-[11px] p-1 rounded border border-slate-700">
+                    <span class="text-[10px] font-bold text-gray-400 uppercase px-1">Até:</span>
+                    <input type="date" id="filtro-relatorio-data-fim" onchange="atualizarVisualizacaoRelatorioA4()" class="bg-slate-900 text-white text-[11px] p-1 rounded border border-slate-700">
+                    <button onclick="limparFiltroDataRelatorio()" class="text-gray-400 hover:text-white px-1" title="Limpar datas"><i class="fa-solid fa-eraser text-xs"></i></button>
                 </div>
-                
-                <button id="btn-torch" onclick="toggleTorch()" class="bg-slate-900 border border-slate-700 hover:border-amber-400 text-amber-400 px-3.5 py-2 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all">
-                    <i class="fa-solid fa-lightbulb"></i>
-                    <span id="torch-text">Luz</span>
+
+                <button onclick="window.print()" class="bg-atag-red hover:bg-atag-redDark text-white px-4 py-1.5 rounded-lg text-xs font-extrabold uppercase shadow flex items-center gap-1.5">
+                    <i class="fa-solid fa-print"></i> Imprimir / PDF
+                </button>
+                <button onclick="fecharRelatorioA4()" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold uppercase">
+                    <i class="fa-solid fa-xmark"></i> Fechar
                 </button>
             </div>
-            <p class="text-[11px] text-gray-400 text-center font-medium">Aproxime o código do retângulo central.</p>
+        </div>
+
+        <div id="relatorio-a4-container" class="w-[210mm] min-h-[297mm] bg-white text-slate-900 p-[10mm_15mm_10mm_15mm] shadow-2xl rounded-none flex flex-col justify-between font-sans relative">
+            <div id="relatorio-a4-conteudo"></div>
         </div>
     </div>
 
-    <!-- MODAL EDITAR ITEM -->
-    <div id="modal-editar" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card border border-atag-border rounded-xl w-full max-w-md p-4 shadow-2xl flex flex-col gap-4">
+    <!-- MODAL IMPORTAÇÃO EM LOTE -->
+    <div id="modal-import-lote" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card border border-slate-700 rounded-xl w-full max-w-lg p-5 shadow-2xl flex flex-col gap-4 bg-slate-900 text-white">
             <div class="flex justify-between items-center border-b border-slate-700 pb-2">
-                <h3 class="text-sm font-bold text-white uppercase">Editar Item & Foto</h3>
-                <button onclick="fecharModalEditar()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-atag-accent flex items-center gap-2">
+                    <i class="fa-solid fa-list-check"></i> Importar Lote (NF + Fornecedor)
+                </h3>
+                <button onclick="fecharModalImportacaoLote()" class="text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
 
-            <input type="hidden" id="edit-id">
-            
             <div class="flex flex-col gap-3">
-                <div>
-                    <label class="text-[11px] font-bold text-gray-400 uppercase">Código de Barras</label>
-                    <input type="text" id="edit-codigo" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm font-bold text-white uppercase mt-1">
-                </div>
-
-                <div class="grid grid-cols-2 gap-2">
+                <div class="bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-lg text-[11px] text-amber-300 flex items-start gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm mt-0.5 shrink-0"></i>
                     <div>
-                        <label class="text-[11px] font-bold text-gray-400 uppercase">Rua</label>
-                        <input type="text" id="edit-rua" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm font-bold text-white uppercase mt-1">
-                    </div>
-                    <div>
-                        <label class="text-[11px] font-bold text-gray-400 uppercase">Posição</label>
-                        <input type="number" id="edit-posicao" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm font-bold text-white uppercase mt-1">
+                        <strong class="block uppercase font-black text-amber-400 mb-0.5">Aviso Importante: Importação Completa</strong>
+                        Importe sempre o <b>lote completo</b> de notas em aberto por filial. O sistema fará a sincronização automática: as notas ausentes no lote colado serão marcadas como <b>Entregues</b> com a data de hoje.
                     </div>
                 </div>
 
                 <div>
-                    <label class="text-[11px] font-bold text-gray-400 uppercase mb-1 block">Foto do Produto (Alterar)</label>
-                    <div class="flex items-center gap-3">
-                        <div id="container-preview-edit" class="relative bg-slate-900 rounded-lg border border-slate-700 overflow-hidden flex items-center justify-center w-20 h-16">
-                            <img id="img-edit-preview" class="w-full h-full object-cover" src="" alt="Sem foto">
-                        </div>
-                        <button type="button" onclick="abrirCapturaFotoRAM('edicao')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-atag-accent border border-slate-700 py-3 rounded-lg text-xs font-bold flex items-center justify-center gap-2 transition-all">
-                            <i class="fa-solid fa-camera text-sm"></i>
-                            <span>Tirar Nova Foto</span>
-                        </button>
-                    </div>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase block mb-1">Filial Destinatária do Lote *</label>
+                    <select id="select-lote-cnpj" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs font-bold text-atag-accent focus:border-sky-400 focus:outline-none">
+                        <option value="09.253.819/0001-35">Matriz (Dourados) - 09.253.819/0001-35</option>
+                        <option value="09.253.819/0002-16">Filial (Campo Grande) - 09.253.819/0002-16</option>
+                    </select>
                 </div>
 
-                <div>
-                    <label class="text-[11px] font-bold text-gray-400 uppercase">Observação</label>
-                    <textarea id="edit-obs" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs text-white mt-1 resize-none"></textarea>
+                <div class="flex flex-col gap-1">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase">Cole os dados (NF $\rightarrow$ Fornecedor separadas por TAB ou Vírgula):</label>
+                    <textarea id="textarea-lote-nfs" rows="6" placeholder="Ex:&#10;105432	SCHADEK&#10;105433	NGK&#10;105434	BOSCH" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-xs text-white font-mono placeholder-gray-600 resize-none focus:border-sky-400 focus:outline-none"></textarea>
                 </div>
             </div>
 
-            <div class="flex gap-2 pt-2 border-t border-slate-700">
-                <button onclick="fecharModalEditar()" class="flex-1 bg-slate-800 text-gray-300 py-2.5 rounded-lg text-xs font-bold">Cancelar</button>
-                <button onclick="salvarEdicaoItem()" class="flex-1 bg-atag-accent text-slate-950 py-2.5 rounded-lg text-xs font-black uppercase">Salvar</button>
+            <div class="flex gap-2 pt-2 border-t border-slate-800">
+                <button onclick="fecharModalImportacaoLote()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-gray-300 py-2.5 rounded-lg text-xs font-bold uppercase">Cancelar</button>
+                <button onclick="processarImportacaoLote()" class="flex-1 bg-sky-500 hover:bg-sky-400 text-slate-950 py-2.5 rounded-lg text-xs font-black uppercase shadow">Processar Lote</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL CAPTURA DE FOTO EM MEMÓRIA RAM -->
-    <div id="modal-captura-foto" class="fixed inset-0 bg-black/95 z-[60] hidden flex flex-col justify-between p-4">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-            <div class="flex items-center gap-2">
-                <i class="fa-solid fa-camera text-atag-accent text-lg"></i>
-                <span class="font-bold text-sm text-white uppercase tracking-wider">Foto em Memória Cache</span>
-            </div>
-            <button type="button" onclick="fecharCapturaFotoRAM()" class="bg-slate-800 text-gray-300 w-9 h-9 rounded-full flex items-center justify-center">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-        </div>
-
-        <div class="relative my-auto w-full max-w-sm mx-auto aspect-square bg-slate-900 rounded-2xl border-2 border-atag-accent/40 overflow-hidden flex items-center justify-center">
-            <video id="video-foto-memoria" autoplay playsinline class="w-full h-full object-cover"></video>
-            <canvas id="canvas-foto-temp" class="hidden"></canvas>
-        </div>
-
-        <div class="flex gap-2 max-w-sm mx-auto w-full">
-            <button type="button" onclick="fecharCapturaFotoRAM()" class="flex-1 bg-slate-800 text-gray-300 py-3 rounded-xl font-bold text-xs uppercase">Cancelar</button>
-            <button type="button" onclick="baterFotoParaRAM()" class="flex-1 bg-atag-accent text-slate-950 py-3 rounded-xl font-black text-xs uppercase shadow-lg flex items-center justify-center gap-2">
-                <i class="fa-solid fa-circle-dot text-red-600 text-base"></i>
-                <span>Tirar Foto</span>
-            </button>
-        </div>
+    <div id="toast-copia" class="fixed bottom-14 left-1/2 -translate-x-1/2 bg-emerald-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow-2xl z-[80] hidden transition-all">
+        Copiado com sucesso! ✓
     </div>
 
-    <!-- MODAL ZOOM FOTO -->
-    <div id="modal-foto" class="fixed inset-0 bg-black/95 z-[70] hidden flex items-center justify-center p-4" onclick="fecharModalFoto()">
-        <img id="img-zoom" class="max-w-full max-h-full rounded-lg shadow-2xl object-contain" src="" alt="Zoom">
-    </div>
-
-    <!-- TOAST DE NOTIFICAÇÃO -->
-    <div id="toast-copia" class="fixed bottom-16 left-1/2 -translate-x-1/2 bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-lg shadow-2xl z-[80] hidden transition-all">
-        Copiado para a área de transferência! ✓
-    </div>
-
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JAVASCRIPT OTIMIZADO -->
     <script>
         const WEB_APP_URL = "COLE_AQUI_A_URL_DA_NOVA_IMPLANTACAO_DO_APPS_SCRIPT";
 
-        let baseDados = [];
-        let fotoBase64 = "";
-        let fotoEdicaoBase64 = "";
-        let origemFoto = "coleta";
-        let html5QrCode = null;
-        let cameraAtualId = null;
-        let isTorchOn = false;
-        let modoVisaoCompacto = false;
-        let streamFotoRAM = null;
-        let ruasRecolhidas = {};
+        let baseCargas = [];
+        let baseTransp = [];
+        let relatorioHistoricoAtual = false;
 
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch((err) => {});
+        function obterDatasBaixaSalvas() {
+            try { return JSON.parse(localStorage.getItem('atag_datas_baixa') || '{}'); } catch(e) { return {}; }
+        }
+
+        function salvarDataBaixaLocal(id, dataIso) {
+            try {
+                const mapa = obterDatasBaixaSalvas();
+                mapa[String(id)] = dataIso;
+                localStorage.setItem('atag_datas_baixa', JSON.stringify(mapa));
+            } catch(e) {}
+        }
+
+        function salvarCacheLocal(chave, dados) {
+            try {
+                localStorage.setItem(`atag_cache_${chave}`, JSON.stringify({
+                    timestamp: Date.now(),
+                    content: dados
+                }));
+            } catch(e) {}
+        }
+
+        function obterCacheLocal(chave) {
+            try {
+                const item = localStorage.getItem(`atag_cache_${chave}`);
+                if (item) return JSON.parse(item).content;
+            } catch(e) {}
+            return null;
+        }
+
+        window.onload = function() {
+            const cargasCache = obterCacheLocal('cargas');
+            const transpCache = obterCacheLocal('transp');
+
+            if (transpCache) {
+                baseTransp = transpCache;
+                preencherSelectTransportadoras();
+                atualizarSelectFiltroTransportadoras();
+                renderizarTransportadoras();
+            }
+
+            if (cargasCache) {
+                baseCargas = cargasCache;
+                processarDatasBaixaCarregamento();
+                atualizarEstatisticas();
+                atualizarSelectFiltroTransportadoras();
+                renderizarCargas();
+                renderizarHistorico();
+            }
+
+            carregarTransportadoras();
+            carregarCargas(false);
+        };
+
+        function norm(str) {
+            return String(str || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim().replace(/\s+/g, ' ');
+        }
+
+        function copiarTexto(texto, origemMsg = "Texto") {
+            if (!texto || texto === "N/A" || texto === "Não informado") {
+                alert("Nenhum dado válido para copiar.");
+                return;
+            }
+            navigator.clipboard.writeText(texto).then(() => {
+                const toast = document.getElementById('toast-copia');
+                toast.innerText = `${origemMsg} copiado: ${texto} ✓`;
+                toast.classList.remove('hidden');
+                setTimeout(() => toast.classList.add('hidden'), 2000);
+            }).catch(err => alert("Erro ao copiar para a área de transferência."));
+        }
+
+        function abrirModalImportacaoLote() {
+            document.getElementById('textarea-lote-nfs').value = "";
+            document.getElementById('modal-import-lote').classList.remove('hidden');
+        }
+
+        function fecharModalImportacaoLote() {
+            document.getElementById('modal-import-lote').classList.add('hidden');
+        }
+
+        async function processarImportacaoLote() {
+            const texto = document.getElementById('textarea-lote-nfs').value.trim();
+            const cnpjSelecionado = document.getElementById('select-lote-cnpj').value;
+            const nomeFilial = cnpjSelecionado.includes("0002-16") ? "Filial (Campo Grande)" : "Matriz (Dourados)";
+
+            if (!texto) {
+                alert("Cole ao menos uma linha contendo a Nota Fiscal e o Fornecedor.");
+                return;
+            }
+
+            const linhas = texto.split(/[\r\n]+/).map(l => l.trim()).filter(l => l.length > 0);
+            let itensLote = [];
+
+            for (let linha of linhas) {
+                let partes = linha.split(/[\t;]+|,{1}/);
+                if (partes.length >= 2) {
+                    let nf = partes[0].trim();
+                    let origem = partes.slice(1).join(' ').trim();
+                    if (nf) itensLote.push({ nf: nf, origem: origem });
+                } else {
+                    let sub = linha.split(' ');
+                    if (sub.length >= 2) {
+                        let nf = sub[0].trim();
+                        let origem = sub.slice(1).join(' ').trim();
+                        if (nf) itensLote.push({ nf: nf, origem: origem });
+                    } else if (linha) {
+                        itensLote.push({ nf: linha, origem: "" });
+                    }
+                }
+            }
+
+            if (itensLote.length === 0) {
+                alert("Nenhuma numeração válida encontrada no formato correto.");
+                return;
+            }
+
+            if (!confirm(`Deseja importar/sincronizar o lote completo para a ${nomeFilial}?\n\n* Notas ausentes no lote colado serão marcadas automaticamente como ENTREGUES com a data de hoje.`)) {
+                return;
+            }
+
+            fecharModalImportacaoLote();
+
+            const nfsNoLoteSet = new Set(itensLote.map(i => norm(i.nf)));
+            const notasParaMarcarEntregue = baseCargas.filter(i => {
+                const statusEntregue = String(i.status || i["Entregue? (checkbox)"] || "").toUpperCase();
+                if (statusEntregue === "TRUE" || statusEntregue === "SIM" || statusEntregue === "ENTREGUE") return false;
+                
+                const cnpjItem = String(i.cnpj || i["CNPJ Destinatário"] || "");
+                if (!cnpjItem.includes(cnpjSelecionado)) return false;
+
+                const nfItem = norm(i.nota || i["Número da NF"] || i.nf || "");
+                return nfItem && !nfsNoLoteSet.has(nfItem);
+            });
+
+            try {
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: "importLote",
+                        modulo: "followup",
+                        cnpj: cnpjSelecionado,
+                        itens: itensLote
+                    })
+                });
+
+                const resultado = await response.json();
+                const dataHojeIso = new Date().toISOString().split('T')[0];
+                let notasBaixadasLote = [];
+                for (let notaAntiga of notasParaMarcarEntregue) {
+                    const idAntigo = notaAntiga.id || notaAntiga["ID_Registro"];
+                    if (idAntigo) {
+                        notaAntiga.status = "ENTREGUE";
+                        notaAntiga["Entregue? (checkbox)"] = "TRUE";
+                        notaAntiga.dataBaixa = dataHojeIso;
+                        salvarDataBaixaLocal(idAntigo, dataHojeIso);
+                        notasBaixadasLote.push(notaAntiga);
+                        await fetch(WEB_APP_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            body: JSON.stringify({ action: "updateFollowUp", modulo: "followup", id: idAntigo, ID_Registro: idAntigo, status: "ENTREGUE" })
+                        });
+                    }
+                }
+
+                if (resultado.status === "sucesso") {
+                    await carregarCargas(true);
+                    alert(`Sincronização Concluída com Sucesso!\n\n• Novas adicionadas: ${resultado.inseridas}\n• Notas anteriores baixadas automaticamente: ${notasBaixadasLote.length}`);
+                } else {
+                    alert("Erro ao processar no servidor: " + (resultado.message || resultado.mensagem));
+                }
+            } catch (e) {
+                alert("Erro de comunicação ao importar lote.");
+            }
+        }
+
+        function copiarMensagemWhatsAppTransportadora() {
+            const transpSelecionada = document.getElementById('filtro-transportadora').value;
+            if (transpSelecionada === "TODAS") {
+                alert("Por favor, selecione uma transportadora específica no filtro ao lado para gerar a mensagem de cobrança.");
+                return;
+            }
+
+            const search = norm(document.getElementById('search-cargas').value);
+            const filtroStatus = document.getElementById('select-filtro-status').value;
+
+            let itensFiltrados = baseCargas.filter(i => {
+                const statusEntregue = String(i.status || i["Entregue? (checkbox)"] || "").toUpperCase();
+                if (statusEntregue === "TRUE" || statusEntregue === "SIM" || statusEntregue === "ENTREGUE") return false;
+
+                const transpItem = i.transportadora || i["TRANSPORTADORA"] || i["Transp."] || i["Transportadora"] || "";
+                if (norm(transpItem) !== norm(transpSelecionada)) return false;
+
+                const nf = String(i.nota || i["Número da NF"] || i.nf || "");
+                const emitente = norm(i.origem || i["Emitente (Razão Social)"] || "");
+                if (!norm(nf).includes(search) && !emitente.includes(search)) return false;
+
+                let statusAtual = "EM TRÂNSITO";
+                const rawPrevisao = i.previsao || i["Previsão Entrega"] || i["Previsão"] || "";
+                const hoje = new Date();
+                hoje.setHours(0, 0, 0, 0);
+
+                if (rawPrevisao) {
+                    const parts = String(rawPrevisao).split("/");
+                    if (parts.length === 3) {
+                        if (new Date(parts[2], parts[1] - 1, parts[0]) < hoje) statusAtual = "PENDENTE / ATRASADA";
+                    }
+                }
+                const obs = String(i.obs || i["OBSERVAÇÕES"] || "").toUpperCase();
+                const statusCampo = String(i.status || "").toUpperCase();
+                if (statusCampo.includes("PENDENTE") || statusCampo.includes("ATRASADA") || obs.includes("ATRASADA") || obs.includes("PENDENTE")) {
+                    statusAtual = "PENDENTE / ATRASADA";
+                }
+
+                if (filtroStatus !== "TODAS" && statusAtual !== filtroStatus) return false;
+                return true;
+            });
+
+            if (itensFiltrados.length === 0) {
+                alert(`Nenhuma carga ativa encontrada para a transportadora "${transpSelecionada}" com os filtros atuais.`);
+                return;
+            }
+
+            let gruposPorCnpj = {};
+            itensFiltrados.forEach(i => {
+                const cnpj = i.cnpj || i["CNPJ Destinatário"] || "09.253.819/0001-35";
+                if (!gruposPorCnpj[cnpj]) gruposPorCnpj[cnpj] = [];
+                gruposPorCnpj[cnpj].push(i);
+            });
+
+            let textoMensagem = `Olá, por favor informar o status de rastreio e previsão das notas abaixo:\n`;
+
+            for (let cnpj in gruposPorCnpj) {
+                let nomeFilial = cnpj.includes("0002-16") ? "Filial Campo Grande" : "Matriz Dourados";
+                textoMensagem += `\n*CNPJ Destinatário: ${cnpj} (${nomeFilial})*\n`;
+
+                gruposPorCnpj[cnpj].forEach(i => {
+                    const nf = i.nota || i["Número da NF"] || i.nf || "S/N";
+                    const emitente = (i.origem || i["Emitente (Razão Social)"] || "FORNECEDOR").toUpperCase();
+                    const rawPrevisao = i.previsao || i["Previsão Entrega"] || "";
+                    
+                    let dataFormatada = rawPrevisao;
+                    if (rawPrevisao.includes("-")) {
+                        const p = rawPrevisao.split("-");
+                        if (p.length === 3) dataFormatada = `${p[2]}/${p[1]}/${p[0]}`;
+                    }
+                    textoMensagem += `- NF *${nf}* (${emitente}) | Previsão: ${dataFormatada || 'N/A'}\n`;
+                });
+            }
+
+            navigator.clipboard.writeText(textoMensagem).then(() => {
+                const toast = document.getElementById('toast-copia');
+                toast.innerText = `Mensagem para ${transpSelecionada} copiada com sucesso! ✓`;
+                toast.classList.remove('hidden');
+                setTimeout(() => toast.classList.add('hidden'), 3000);
+            }).catch(err => alert("Erro ao copiar mensagem para a área de transferência."));
+        }
+
+        function calcularStatusAutomaticoFormulario() {
+            const statusSelect = document.getElementById('reg-status');
+            if (!statusSelect || statusSelect.value === "ENTREGUE") return;
+            const previsaoVal = document.getElementById('reg-previsao').value;
+            if (!previsaoVal) { statusSelect.value = "EM TRÂNSITO"; return; }
+            const partes = previsaoVal.split("-");
+            if (partes.length === 3) {
+                const dataPrevisao = new Date(partes[0], partes[1] - 1, partes[2]);
+                const hoje = new Date();
+                hoje.setHours(0, 0, 0, 0);
+                statusSelect.value = (dataPrevisao < hoje) ? "PENDENTE / ATRASADA" : "EM TRÂNSITO";
+            }
+        }
+
+        function preencherDadosTransportadora() {
+            const nomeTransp = document.getElementById('reg-transp').value;
+            const transpObj = baseTransp.find(t => norm(t.nome || t["TRANSPORTADORA"] || t["Transportadora"]) === norm(nomeTransp));
+            if (transpObj) {
+                document.getElementById('reg-site').value = transpObj.link || transpObj["SITE"] || transpObj["Site"] || "";
+                document.getElementById('reg-fone').value = transpObj.telefone || transpObj["TELEFONE"] || transpObj["Telefone"] || "";
+                document.getElementById('reg-whats').value = transpObj.whatsapp || transpObj["WHATSAPP"] || transpObj["WHATS"] || transpObj["WhatsApp"] || "";
+            }
+        }
+
+        function preencherDadosPorFornecedor() {
+            const inputOrigem = document.getElementById('reg-origem');
+            const selectCnpj = document.getElementById('reg-cnpj');
+            const selectTransp = document.getElementById('reg-transp');
+            
+            const fornecedorDigitado = norm(inputOrigem.value);
+            const cnpjSelecionado = selectCnpj.value;
+            if (!fornecedorDigitado) return;
+
+            const cargaAnterior = baseCargas.find(i => {
+                const origemItem = norm(i.origem || i["Emitente (Razão Social)"] || i["Emitente"] || i["Fornecedor"]);
+                const cnpjItem = i.cnpj || i["CNPJ Destinatário"] || "09.253.819/0001-35";
+                const transpItem = i.transportadora || i["TRANSPORTADORA"] || i["Transp."] || i["Transportadora"];
+                return origemItem === fornecedorDigitado && cnpjItem.includes(cnpjSelecionado) && transpItem;
+            });
+
+            if (cargaAnterior) {
+                const transpAnterior = cargaAnterior.transportadora || cargaAnterior["TRANSPORTADORA"] || cargaAnterior["Transp."] || cargaAnterior["Transportadora"];
+                if (transpAnterior) {
+                    selectTransp.value = transpAnterior;
+                    preencherDadosTransportadora();
+                }
+                if (cargaAnterior.site || cargaAnterior["SITE"] || cargaAnterior["Site"]) document.getElementById('reg-site').value = cargaAnterior.site || cargaAnterior["SITE"] || cargaAnterior["Site"];
+                if (cargaAnterior.telefone || cargaAnterior["TELEFONE"] || cargaAnterior["Telefone"]) document.getElementById('reg-fone').value = cargaAnterior.telefone || cargaAnterior["TELEFONE"] || cargaAnterior["Telefone"];
+                if (cargaAnterior.whatsapp || cargaAnterior["WHATS"] || cargaAnterior["WHATSAPP"] || cargaAnterior["WhatsApp"]) document.getElementById('reg-whats').value = cargaAnterior.whatsapp || cargaAnterior["WHATS"] || cargaAnterior["WHATSAPP"] || cargaAnterior["WhatsApp"];
+            }
+        }
+
+        function mudarAba(aba) {
+            ['cargas', 'historico', 'transp'].forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                if (el) el.classList.add('hidden');
+            });
+            document.getElementById(`view-${aba}`).classList.remove('hidden');
+
+            ['cargas', 'historico', 'transp'].forEach(v => {
+                const deskBtn = document.getElementById(`nav-desk-${v}`);
+                const mobBtn = document.getElementById(`nav-mob-${v}`);
+                if (deskBtn) deskBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-gray-400 hover:text-white";
+                if (mobBtn) mobBtn.className = "py-2 rounded-xl font-bold text-[10px] flex flex-col items-center gap-0.5 text-gray-400 hover:bg-slate-800/50";
+            });
+
+            if (aba === 'cargas') {
+                document.getElementById('nav-desk-cargas').className = "px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-atag-accent/20 text-atag-accent border border-atag-accent/40";
+                document.getElementById('nav-mob-cargas').className = "py-2 rounded-xl font-bold text-[10px] flex flex-col items-center gap-0.5 bg-slate-800 text-atag-accent border border-atag-accent/40";
+                renderizarCargas();
+            } else if (aba === 'historico') {
+                document.getElementById('nav-desk-historico').className = "px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
+                document.getElementById('nav-mob-historico').className = "py-2 rounded-xl font-bold text-[10px] flex flex-col items-center gap-0.5 bg-slate-800 text-emerald-400 border border-emerald-500/40";
+                renderizarHistorico();
+            } else {
+                document.getElementById('nav-desk-transp').className = "px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-atag-accent/20 text-atag-accent border border-atag-accent/40";
+                document.getElementById('nav-mob-transp').className = "py-2 rounded-xl font-bold text-[10px] flex flex-col items-center gap-0.5 bg-slate-800 text-atag-accent border border-atag-accent/40";
+                renderizarTransportadoras();
+            }
+        }
+
+        function filtrarPorEstatistica(tipo) {
+            if (tipo === 'entregues') {
+                mudarAba('historico');
+                return;
+            }
+            mudarAba('cargas');
+            const selectFiltro = document.getElementById('select-filtro-status');
+            if (tipo === 'transito') selectFiltro.value = "EM TRÂNSITO";
+            else if (tipo === 'pendentes') selectFiltro.value = "PENDENTE / ATRASADA";
+            renderizarCargas();
+        }
+
+        async function carregarCargas(forceRedraw = true) {
+            try {
+                const res = await fetch(`${WEB_APP_URL}?tipo=followup`);
+                const data = await res.json();
+                if (Array.isArray(data)) {
+                    baseCargas = data;
+                    salvarCacheLocal('cargas', data);
+                    processarDatasBaixaCarregamento();
+                    atualizarEstatisticas();
+                    atualizarSelectFiltroTransportadoras();
+                    if (forceRedraw) {
+                        renderizarCargas();
+                        renderizarHistorico();
+                    }
+                    setOnlineStatus(true, "ONLINE");
+                }
+            } catch(e) {
+                setOnlineStatus(false, "OFFLINE");
+            }
+        }
+
+        function processarDatasBaixaCarregamento() {
+            const mapaDatas = obterDatasBaixaSalvas();
+            const dataHojeIso = new Date().toISOString().split('T')[0];
+            let recemBaixadasCount = 0;
+
+            baseCargas.forEach(i => {
+                const statusEntregue = String(i.status || i["Entregue? (checkbox)"] || "").toUpperCase();
+                const isEntregue = (statusEntregue === "TRUE" || statusEntregue === "SIM" || statusEntregue === "ENTREGUE");
+                const cId = String(i.id || i["ID_Registro"]);
+
+                if (isEntregue) {
+                    if (mapaDatas[cId]) {
+                        i.dataBaixa = mapaDatas[cId];
+                    } else {
+                        const cnpj = String(i.cnpj || i["CNPJ Destinatário"] || "");
+                        if (cnpj.includes("0002-16") && recemBaixadasCount < 11) {
+                            i.dataBaixa = dataHojeIso;
+                            salvarDataBaixaLocal(cId, dataHojeIso);
+                            recemBaixadasCount++;
+                        } else {
+                            i.dataBaixa = "";
+                        }
+                    }
+                }
             });
         }
 
-        function voltarModulos() { window.location.href = "./index.html"; }
-
-        function tocarSom(tipo) {
+        async function carregarTransportadoras() {
             try {
-                const ctx = new (window.AudioContext || window.webkitAudioContext)();
-                if (tipo === 'sucesso') {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = "sine";
-                    osc.frequency.value = 1400;
-                    gain.gain.value = 0.2;
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.start();
-                    osc.stop(ctx.currentTime + 0.1);
-                    if (navigator.vibrate) navigator.vibrate(80);
-                } else if (tipo === 'alerta') {
-                    const osc1 = ctx.createOscillator();
-                    const gain1 = ctx.createGain();
-                    osc1.type = "sawtooth";
-                    osc1.frequency.value = 350;
-                    gain1.gain.value = 0.3;
-                    osc1.connect(gain1);
-                    gain1.connect(ctx.destination);
-                    osc1.start();
-                    osc1.stop(ctx.currentTime + 0.15);
-                    if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                const res = await fetch(`${WEB_APP_URL}?tipo=transportadoras`);
+                const data = await res.json();
+                if (Array.isArray(data)) {
+                    baseTransp = data;
+                    salvarCacheLocal('transp', data);
+                    preencherSelectTransportadoras();
+                    atualizarSelectFiltroTransportadoras();
+                    renderizarTransportadoras();
                 }
             } catch(e) {}
         }
 
-        function copiarTexto(texto) {
-            if (!texto || texto === "SEM CÓDIGO") return;
-            navigator.clipboard.writeText(texto).then(() => {
-                const toast = document.getElementById('toast-copia');
-                toast.classList.remove('hidden');
-                setTimeout(() => { toast.classList.add('hidden'); }, 1500);
-            }).catch(err => {});
-        }
-
-        window.onload = function() {
-            carregarDadosServidor(true);
-            focarInputCodigo();
-
-            setInterval(() => { carregarDadosServidor(false); }, 4000);
-
-            window.addEventListener('keydown', function(e) {
-                if (e.key === 'F2' || (e.key === 'Escape' && document.getElementById('modal-camera').classList.contains('hidden'))) {
-                    e.preventDefault();
-                    focarInputCodigo();
-                }
-                
-                if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && document.getElementById('modal-editar').classList.contains('hidden') && document.getElementById('modal-camera').classList.contains('hidden')) {
-                    if (e.target.id === 'input-codigo' && e.target.value.trim() !== '') {
-                        e.preventDefault();
-                        document.getElementById('input-rua').focus();
-                        document.getElementById('input-rua').select();
-                    } else if (document.getElementById('input-codigo').value && document.getElementById('input-rua').value && document.getElementById('input-posicao').value) {
-                        e.preventDefault();
-                        salvarColeta();
-                    }
+        function preencherSelectTransportadoras() {
+            const select = document.getElementById('reg-transp');
+            if (!select) return;
+            const atual = select.value;
+            select.innerHTML = '<option value="">Selecione...</option>';
+            baseTransp.forEach(t => {
+                const nome = t.nome || t["TRANSPORTADORA"] || t["Transportadora"] || t["Nome"] || "";
+                if (nome && String(nome).trim() !== "") {
+                    const opt = document.createElement('option');
+                    opt.value = nome.trim();
+                    opt.text = nome.trim();
+                    select.appendChild(opt);
                 }
             });
+            select.value = atual;
+        }
 
-            document.getElementById('input-rua').addEventListener('input', function(e) {
-                let val = e.target.value.toUpperCase().replace(/[^R0-9]/g, '');
-                if (val.length > 0 && !val.startsWith('R')) { val = 'R' + val.replace(/R/g, ''); }
-                e.target.value = val;
-                atualizarLocacaoCompleta();
-                if (val.length === 3) { document.getElementById('input-posicao').focus(); }
+        function atualizarSelectFiltroTransportadoras() {
+            const select = document.getElementById('filtro-transportadora');
+            if (!select) return;
+            const atual = select.value;
+            select.innerHTML = '<option value="TODAS">Todas Transportadoras</option>';
+            const transportadorasUnicas = [...new Set(baseCargas.map(i => i.transportadora || i["TRANSPORTADORA"] || i["Transp."] || i["Transportadora"] || "").filter(Boolean))];
+            transportadorasUnicas.sort().forEach(nome => {
+                const opt = document.createElement('option');
+                opt.value = nome.trim();
+                opt.text = nome.trim();
+                select.appendChild(opt);
             });
-
-            document.getElementById('input-posicao').addEventListener('input', function(e) {
-                let val = e.target.value.replace(/\D/g, '');
-                if (val.length > 4) val = val.substring(0, 4);
-                e.target.value = val;
-                atualizarLocacaoCompleta();
-            });
-
-            document.getElementById('input-codigo').addEventListener('input', function(e) {
-                e.target.value = e.target.value.toUpperCase();
-                const btnClear = document.getElementById('btn-clear-code');
-                if (e.target.value) { btnClear.classList.remove('hidden'); }
-                else { btnClear.classList.add('hidden'); }
-                validarSKUDuplicado();
-            });
-        };
-
-        function focarInputCodigo() {
-            const inputCod = document.getElementById('input-codigo');
-            if (inputCod) { inputCod.focus(); inputCod.select(); }
-        }
-
-        function toggleModoVisao() {
-            modoVisaoCompacto = !modoVisaoCompacto;
-            document.getElementById('text-modo-visao').innerText = modoVisaoCompacto ? "Confortável" : "Compacto";
-            renderizarEstoque();
-        }
-
-        function getLocacaoFormatada() {
-            let rua = document.getElementById('input-rua').value.trim().toUpperCase();
-            let pos = document.getElementById('input-posicao').value.trim();
-            if (!rua) return "";
-            if (rua.length === 2 && !isNaN(rua[1])) { rua = 'R0' + rua[1]; }
-            if (pos) {
-                let numPos = parseInt(pos, 10);
-                if (!isNaN(numPos) && numPos >= 1 && numPos <= 2000) {
-                    pos = String(numPos).padStart(3, '0');
-                    return `${rua}-${pos}`;
-                }
-            }
-            return rua;
-        }
-
-        function atualizarLocacaoCompleta() {
-            const loc = getLocacaoFormatada();
-            document.getElementById('locacao-completa').innerText = loc || "R00-000";
-            validarLocacaoOcupada();
-        }
-
-        function limparCodigo() {
-            document.getElementById('input-codigo').value = "";
-            document.getElementById('btn-clear-code').classList.add('hidden');
-            validarSKUDuplicado();
-            focarInputCodigo();
-        }
-
-        async function carregarDadosServidor(mostrarCarregando = true) {
-            if (mostrarCarregando) { setOnlineStatus(false, "CARREGANDO..."); }
-            try {
-                const res = await fetch(WEB_APP_URL);
-                const data = await res.json();
-                if (Array.isArray(data)) {
-                    if (JSON.stringify(baseDados) !== JSON.stringify(data)) {
-                        baseDados = data;
-                        atualizarContadores();
-                        preencherFiltroRuas();
-                        renderizarEstoque();
-                        validarLocacaoOcupada();
-                        validarSKUDuplicado();
-                    }
-                    setOnlineStatus(true, "ONLINE");
-                }
-            } catch (err) {
-                if (mostrarCarregando) { setOnlineStatus(false, "ERRO SINC"); }
-            }
+            select.value = atual;
         }
 
         function setOnlineStatus(online, text) {
-            const badge = document.getElementById('status-badge');
             document.getElementById('status-text').innerText = text;
-            badge.className = online ? "flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs px-2.5 py-1 rounded-full font-semibold" : "flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs px-2.5 py-1 rounded-full font-semibold";
+            document.getElementById('status-text-mob').innerText = text;
+            const cls = online ? "flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs px-3 py-1.5 rounded-full font-semibold" : "flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs px-3 py-1.5 rounded-full font-semibold";
+            document.getElementById('status-badge-desk').className = cls;
         }
 
-        function validarLocacaoOcupada() {
-            const loc = getLocacaoFormatada();
-            const alertBox = document.getElementById('alert-locacao');
-            const inputRua = document.getElementById('input-rua');
-            const inputPos = document.getElementById('input-posicao');
+        function atualizarEstatisticas() {
+            let transito = 0, pendentes = 0, entregues = 0;
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
 
-            if (!loc || loc.length < 7) {
-                alertBox.classList.add('hidden');
-                inputRua.classList.remove('input-success', 'input-warning');
-                inputPos.classList.remove('input-success', 'input-warning');
-                return;
-            }
-
-            const itemExistente = baseDados.find(i => (i.locacao || i["Locação"] || "") === loc);
-            if (itemExistente) {
-                const sku = itemExistente.codigo || itemExistente["Código de Barras"] || "SKU";
-                alertBox.className = "p-2 rounded-lg text-xs font-medium flex items-center gap-2 border bg-amber-500/10 border-amber-500/30 text-amber-300 mt-2.5";
-                alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm"></i> <span>Atenção: Locação <b>${loc}</b> já possui o SKU: <b>${sku}</b></span>`;
-                alertBox.classList.remove('hidden');
-                inputRua.classList.add('input-warning');
-                inputPos.classList.add('input-warning');
-                tocarSom('alerta');
-            } else {
-                alertBox.classList.add('hidden');
-                inputRua.classList.remove('input-warning');
-                inputPos.classList.remove('input-warning');
-                inputRua.classList.add('input-success');
-                inputPos.classList.add('input-success');
-            }
-        }
-
-        function validarSKUDuplicado() {
-            const cod = document.getElementById('input-codigo').value.trim().toUpperCase();
-            const alertBox = document.getElementById('alert-sku');
-            const inputCod = document.getElementById('input-codigo');
-
-            if (!cod) {
-                alertBox.classList.add('hidden');
-                inputCod.classList.remove('input-success', 'input-warning');
-                return;
-            }
-
-            const repetidos = baseDados.filter(i => String(i.codigo || i["Código de Barras"] || "").trim().toUpperCase() === cod);
-            if (repetidos.length > 0) {
-                const locs = repetidos.map(r => r.locacao || r["Locação"] || "S/L").join(", ");
-                alertBox.className = "p-2 rounded-lg text-xs font-medium flex items-start gap-2 border bg-sky-500/10 border-sky-500/30 text-sky-300";
-                alertBox.innerHTML = `<i class="fa-solid fa-info-circle text-sky-400 text-sm mt-0.5"></i> <span>SKU bipado <b>${repetidos.length}x</b> nas locações: <b>${locs}</b></span>`;
-                alertBox.classList.remove('hidden');
-                inputCod.classList.add('input-warning');
-                tocarSom('alerta');
-            } else {
-                alertBox.classList.add('hidden');
-                inputCod.classList.remove('input-warning');
-                inputCod.classList.add('input-success');
-            }
-        }
-
-        async function salvarColeta() {
-            const rua = document.getElementById('input-rua').value.trim();
-            const pos = document.getElementById('input-posicao').value.trim();
-            const codigo = document.getElementById('input-codigo').value.trim().toUpperCase();
-            const obs = document.getElementById('input-obs').value.trim();
-            const locacao = getLocacaoFormatada();
-
-            if (!rua || rua.length !== 3 || !pos) {
-                alert("Por favor, preencha a Rua (ex: R01) e uma Posição válida.");
-                tocarSom('alerta');
-                return;
-            }
-            
-            let numPos = parseInt(pos, 10);
-            if (isNaN(numPos) || numPos < 1 || numPos > 2000) {
-                alert("A posição deve estar entre 001 e 2000.");
-                tocarSom('alerta');
-                return;
-            }
-
-            if (!codigo) {
-                alert("Por favor, informe ou bipe um Código de Barras.");
-                tocarSom('alerta');
-                return;
-            }
-
-            const btnSalvar = document.getElementById('btn-salvar');
-            const btnSalvarDesktop = document.getElementById('btn-salvar-desktop');
-            const textBtnDesk = document.getElementById('text-btn-salvar-desktop');
-            const iconBtnDesk = document.getElementById('icon-btn-salvar-desktop');
-            const textBtnMob = document.getElementById('text-btn-salvar-mobile');
-            const iconBtnMob = document.getElementById('icon-btn-salvar-mobile');
-            
-            btnSalvar.disabled = true;
-            if(btnSalvarDesktop) btnSalvarDesktop.disabled = true;
-
-            const payload = {
-                action: "insert",
-                codigo: codigo,
-                localizacao: rua,
-                posicao: String(numPos).padStart(3, '0'),
-                locacao: locacao,
-                foto: fotoBase64,
-                obs: obs
-            };
-
-            try {
-                await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(payload)
-                });
-
-                tocarSom('sucesso');
-
-                btnSalvar.classList.add('btn-salvo-sucesso');
-                if (btnSalvarDesktop) btnSalvarDesktop.classList.add('btn-salvo-sucesso');
-                
-                if (textBtnDesk) textBtnDesk.innerText = "Salvo com Sucesso ✓";
-                if (iconBtnDesk) iconBtnDesk.className = "fa-solid fa-circle-check text-base";
-                if (textBtnMob) textBtnMob.innerText = "SALVO!";
-                if (iconBtnMob) iconBtnMob.className = "fa-solid fa-circle-check text-base";
-
-                setTimeout(() => {
-                    btnSalvar.classList.remove('btn-salvo-sucesso');
-                    if (btnSalvarDesktop) btnSalvarDesktop.classList.remove('btn-salvo-sucesso');
-                    
-                    if (textBtnDesk) textBtnDesk.innerHTML = `<i class="fa-solid fa-floppy-disk text-base" id="icon-btn-salvar-desktop"></i><span id="text-btn-salvar-desktop">Salvar Lançamento</span><span class="text-[10px] font-mono bg-black/30 px-1.5 py-0.5 rounded border border-white/20">[Enter]</span>`;
-                    if (textBtnMob) textBtnMob.innerText = "SALVAR";
-                    if (iconBtnMob) iconBtnMob.className = "fa-solid fa-floppy-disk text-base";
-                    
-                    btnSalvar.disabled = false;
-                    if(btnSalvarDesktop) btnSalvarDesktop.disabled = false;
-                }, 700);
-
-                document.getElementById('input-codigo').value = "";
-                document.getElementById('input-posicao').value = "";
-                document.getElementById('input-obs').value = "";
-                document.getElementById('btn-clear-code').classList.add('hidden');
-                document.getElementById('input-rua').classList.remove('input-success', 'input-warning');
-                document.getElementById('input-posicao').classList.remove('input-success', 'input-warning');
-                document.getElementById('input-codigo').classList.remove('input-success', 'input-warning');
-                removerFoto();
-                
-                focarInputCodigo();
-                carregarDadosServidor(false);
-
-            } catch (e) {
-                tocarSom('alerta');
-                alert("Erro ao salvar lançamento.");
-                btnSalvar.disabled = false;
-                if(btnSalvarDesktop) btnSalvarDesktop.disabled = false;
-            }
-        }
-
-        async function abrirCapturaFotoRAM(tipo) {
-            origemFoto = tipo;
-            const modal = document.getElementById('modal-captura-foto');
-            const video = document.getElementById('video-foto-memoria');
-            modal.classList.remove('hidden');
-
-            try {
-                streamFotoRAM = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: { exact: "environment" } },
-                    audio: false
-                });
-                video.srcObject = streamFotoRAM;
-            } catch (err) {
-                try {
-                    streamFotoRAM = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
-                    video.srcObject = streamFotoRAM;
-                } catch (e) {
-                    alert("Não foi possível aceder à câmara para fotografia.");
-                    fecharCapturaFotoRAM();
+            baseCargas.forEach(i => {
+                const statusEntregue = String(i.status || i["Entregue? (checkbox)"] || "").toUpperCase();
+                if (statusEntregue === "TRUE" || statusEntregue === "SIM" || statusEntregue === "ENTREGUE") {
+                    entregues++;
+                    return;
                 }
-            }
-        }
-
-        function baterFotoParaRAM() {
-            const video = document.getElementById('video-foto-memoria');
-            const canvas = document.getElementById('canvas-foto-temp');
-            const ctx = canvas.getContext('2d');
-            let width = video.videoWidth || 640;
-            let height = video.videoHeight || 480;
-
-            if (width > 600) {
-                height = Math.round((height * 600) / width);
-                width = 600;
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-            ctx.drawImage(video, 0, 0, width, height);
-            const base64Gerada = canvas.toDataURL('image/jpeg', 0.4);
-
-            if (origemFoto === 'coleta') {
-                fotoBase64 = base64Gerada;
-                document.getElementById('img-preview').src = fotoBase64;
-                document.getElementById('container-preview-foto').classList.remove('hidden');
-                document.getElementById('btn-foto-trigger').classList.add('hidden');
-            } else {
-                fotoEdicaoBase64 = base64Gerada;
-                document.getElementById('img-edit-preview').src = fotoEdicaoBase64;
-            }
-            fecharCapturaFotoRAM();
-        }
-
-        function fecharCapturaFotoRAM() {
-            if (streamFotoRAM) {
-                streamFotoRAM.getTracks().forEach(track => track.stop());
-                streamFotoRAM = null;
-            }
-            document.getElementById('modal-captura-foto').classList.add('hidden');
-        }
-
-        function removerFoto() {
-            fotoBase64 = "";
-            document.getElementById('img-preview').src = "";
-            document.getElementById('container-preview-foto').classList.add('hidden');
-            document.getElementById('btn-foto-trigger').classList.remove('hidden');
-        }
-
-        async function abrirModalCamera() {
-            document.getElementById('modal-camera').classList.remove('hidden');
-            iniciarScannerHtml5();
-        }
-
-        async function iniciarScannerHtml5() {
-            if (html5QrCode) {
-                try { await html5QrCode.stop(); } catch(e) {}
-                html5QrCode = null;
-            }
-
-            try {
-                const devices = await Html5Qrcode.getCameras();
-                const selectCam = document.getElementById('select-camera');
-                selectCam.innerHTML = "";
-
-                if (devices && devices.length > 0) {
-                    let backCamId = devices[0].id;
-                    devices.forEach((cam, index) => {
-                        const opt = document.createElement('option');
-                        opt.value = cam.id;
-                        let label = cam.label || `Câmera ${index + 1}`;
-                        if (label.toLowerCase().includes('back') || label.toLowerCase().includes('traseira') || label.toLowerCase().includes('environment')) {
-                            backCamId = cam.id;
-                        }
-                        opt.text = label;
-                        selectCam.appendChild(opt);
-                    });
-                    cameraAtualId = backCamId;
-                    selectCam.value = backCamId;
-                    startCameraWithConfig(cameraAtualId);
-                } else { alert("Nenhuma câmera encontrada."); }
-            } catch (err) {}
-        }
-
-        function startCameraWithConfig(cameraId) {
-            if (html5QrCode) {
-                html5QrCode.stop().then(() => { renderCameraInstance(cameraId); }).catch(() => { renderCameraInstance(cameraId); });
-            } else { renderCameraInstance(cameraId); }
-        }
-
-        function renderCameraInstance(cameraId) {
-            html5QrCode = new Html5Qrcode("qr-reader");
-            const config = {
-                fps: 25,
-                qrbox: { width: 280, height: 130 },
-                aspectRatio: 1.0,
-                experimentalFeatures: { useBarCodeDetectorIfSupported: true },
-                formatsToSupport: [
-                    Html5QrcodeSupportedFormats.CODE_128,
-                    Html5QrcodeSupportedFormats.CODE_39,
-                    Html5QrcodeSupportedFormats.EAN_13,
-                    Html5QrcodeSupportedFormats.UPC_A,
-                    Html5QrcodeSupportedFormats.QR_CODE
-                ]
-            };
-
-            html5QrCode.start({ deviceId: { exact: cameraId } }, config, onScanSuccess).catch(() => {
-                html5QrCode.start({ deviceId: cameraId }, config, onScanSuccess).catch(() => {});
-            });
-        }
-
-        function onScanSuccess(decodedText) {
-            tocarSom('sucesso');
-            document.getElementById('input-codigo').value = decodedText.toUpperCase();
-            document.getElementById('btn-clear-code').classList.remove('hidden');
-            validarSKUDuplicado();
-            fecharModalCamera();
-            document.getElementById('input-rua').focus();
-        }
-
-        function trocarCamera(newCamId) {
-            cameraAtualId = newCamId;
-            startCameraWithConfig(newCamId);
-        }
-
-        function toggleTorch() {
-            if (!html5QrCode) return;
-            isTorchOn = !isTorchOn;
-            html5QrCode.applyVideoConstraints({ advanced: [{ torch: isTorchOn }] }).then(() => {
-                document.getElementById('torch-text').innerText = isTorchOn ? "Ligada" : "Luz";
-            }).catch(() => { isTorchOn = false; });
-        }
-
-        function fecharModalCamera() {
-            if (html5QrCode) {
-                html5QrCode.stop().then(() => {
-                    document.getElementById('modal-camera').classList.add('hidden');
-                    html5QrCode = null;
-                }).catch(() => {
-                    document.getElementById('modal-camera').classList.add('hidden');
-                    html5QrCode = null;
-                });
-            } else { document.getElementById('modal-camera').classList.add('hidden'); }
-        }
-
-        function exportarRelatorioCSV() {
-            const filtroRua = document.getElementById('select-filtro-rua').value;
-            let itensFiltrados = baseDados.filter(i => {
-                const loc = i.locacao || i["Locação"] || "";
-                if (filtroRua === "TODAS") return true;
-                return loc.startsWith(filtroRua);
-            });
-
-            if (itensFiltrados.length === 0) { alert("Não há dados para exportar neste filtro."); return; }
-
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-            csvContent += "Código de Barras / SKU;Locação;Rua;Posição;Observação\n";
-
-            itensFiltrados.forEach(i => {
-                const cod = i.codigo || i["Código de Barras"] || "";
-                const loc = i.locacao || i["Locação"] || "";
-                const rua = i.localizacao || i["Localização"] || "";
-                const pos = i.posicao || i["Posição"] || "";
-                const obs = (i.obs || i["OBS ADICIONAL"] || "").replace(/;/g, ',');
-                csvContent += `"${cod}";"${loc}";"${rua}";"${pos}";"${obs}"\n`;
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            const dataHoje = new Date().toISOString().slice(0,10);
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `Relatorio_ATAG_Estoque_${filtroRua}_${dataHoje}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        function preencherFiltroRuas() {
-            const select = document.getElementById('select-filtro-rua');
-            const valorAtual = select.value;
-            select.innerHTML = '<option value="TODAS">TODAS AS RUAS</option>';
-            const ruasSet = new Set();
-            baseDados.forEach(item => {
-                const loc = item.locacao || item["Locação"] || "";
-                if (loc.startsWith("R")) {
-                    const rua = loc.split("-")[0];
-                    if (rua) ruasSet.add(rua);
+                let isAtrasado = false;
+                const rawPrevisao = i.previsao || i["Previsão Entrega"] || i["Previsao Entrega"] || "";
+                if (rawPrevisao) {
+                    const parts = String(rawPrevisao).split("/");
+                    if (parts.length === 3) {
+                        const dataPrevObj = new Date(parts[2], parts[1] - 1, parts[0]);
+                        if (dataPrevObj < hoje) isAtrasado = true;
+                    }
+                }
+                const obs = String(i.obs || i["OBSERVAÇÕES"] || "").toUpperCase();
+                const statusCampo = String(i.status || "").toUpperCase();
+                if (isAtrasado || statusCampo.includes("PENDENTE") || statusCampo.includes("ATRASADA") || obs.includes("ATRASADA") || obs.includes("PENDENTE")) {
+                    pendentes++;
+                } else {
+                    transito++;
                 }
             });
-            Array.from(ruasSet).sort().forEach(rua => {
-                const opt = document.createElement('option');
-                opt.value = rua;
-                opt.text = `RUA ${rua}`;
-                select.appendChild(opt);
-            });
-            select.value = valorAtual;
+
+            document.getElementById('stat-transito').innerText = transito;
+            document.getElementById('stat-pendentes').innerText = pendentes;
+            document.getElementById('stat-entregues').innerText = entregues;
         }
 
-        function toggleAcordeaoRua(ruaId) {
-            ruasRecolhidas[ruaId] = !ruasRecolhidas[ruaId];
-            const contentEl = document.getElementById(`content-rua-${ruaId}`);
-            const iconEl = document.getElementById(`icon-rua-${ruaId}`);
-            const textEl = document.getElementById(`text-status-rua-${ruaId}`);
-
-            if (ruasRecolhidas[ruaId]) {
-                contentEl.classList.remove('expanded');
-                iconEl.className = "fa-solid fa-chevron-right text-atag-accent text-xs transition-transform";
-                textEl.innerText = "Expandir";
-            } else {
-                contentEl.classList.add('expanded');
-                iconEl.className = "fa-solid fa-chevron-down text-atag-accent text-xs transition-transform";
-                textEl.innerText = "Recolher";
-            }
-        }
-
-        function renderizarEstoque() {
-            const container = document.getElementById('lista-estoque');
-            const filtroRua = document.getElementById('select-filtro-rua').value;
+        function renderizarCargas() {
+            const container = document.getElementById('lista-cargas');
+            const search = norm(document.getElementById('search-cargas').value);
+            const filtroStatus = document.getElementById('select-filtro-status').value;
+            const filtroTransp = document.getElementById('filtro-transportadora').value;
             container.innerHTML = "";
 
-            let itensFiltrados = baseDados.filter(i => {
-                const loc = i.locacao || i["Locação"] || "";
-                if (filtroRua === "TODAS") return true;
-                return loc.startsWith(filtroRua);
+            let itens = baseCargas.filter(i => {
+                const statusEntregue = String(i.status || i["Entregue? (checkbox)"] || "").toUpperCase();
+                if (statusEntregue === "TRUE" || statusEntregue === "SIM" || statusEntregue === "ENTREGUE") return false;
+
+                const nf = String(i.nota || i["Número da NF"] || i.nf || "");
+                const emitente = norm(i.origem || i["Emitente (Razão Social)"] || "");
+                const transp = norm(i.transportadora || i["TRANSPORTADORA"] || i["Transp."] || i["Transportadora"] || "");
+
+                if (!norm(nf).includes(search) && !emitente.includes(search) && !transp.includes(search)) return false;
+                if (filtroTransp !== "TODAS" && norm(i.transportadora || i["TRANSPORTADORA"] || i["Transp."] || i["Transportadora"] || "") !== norm(filtroTransp)) return false;
+
+                if (filtroStatus === "SEM_DADOS") {
+                    const transpVal = String(i.transportadora || i["TRANSPORTADORA"] || "").trim();
+                    const prevVal = String(i.previsao || i["Previsão Entrega"] || "").trim();
+                    if (transpVal !== "" && prevVal !== "") return false;
+                } else {
+                    let statusAtual = "EM TRÂNSITO";
+                    const rawPrevisao = i.previsao || i["Previsão Entrega"] || i["Previsão"] || "";
+                    const hoje = new Date();
+                    hoje.setHours(0, 0, 0, 0);
+
+                    if (rawPrevisao) {
+                        const parts = String(rawPrevisao).split("/");
+                        if (parts.length === 3) {
+                            if (new Date(parts[2], parts[1] - 1, parts[0]) < hoje) statusAtual = "PENDENTE / ATRASADA";
+                        }
+                    }
+                    const obs = String(i.obs || i["OBSERVAÇÕES"] || "").toUpperCase();
+                    const statusCampo = String(i.status || "").toUpperCase();
+                    if (statusCampo.includes("PENDENTE") || statusCampo.includes("ATRASADA") || obs.includes("ATRASADA") || obs.includes("PENDENTE")) {
+                        statusAtual = "PENDENTE / ATRASADA";
+                    }
+                    if (filtroStatus !== "TODAS" && statusAtual !== filtroStatus) return false;
+                }
+                return true;
             });
 
-            itensFiltrados.sort((a, b) => {
-                const locA = a.locacao || a["Locação"] || "";
-                const locB = b.locacao || b["Locação"] || "";
-                return locA.localeCompare(locB);
-            });
+            document.getElementById('total-cargas-contador').innerText = `${itens.length} CARGAS`;
 
-            document.getElementById('total-itens-contador').innerText = `${itensFiltrados.length} ITENS`;
-
-            if (itensFiltrados.length === 0) {
-                container.innerHTML = `<div class="p-8 text-center text-gray-500 font-bold text-xs uppercase tracking-wider">Nenhum item cadastrado.</div>`;
+            if (itens.length === 0) {
+                container.innerHTML = `<div class="p-6 text-center text-gray-500 font-bold text-xs uppercase">Nenhuma carga encontrada.</div>`;
                 return;
             }
 
-            // SE FILTRO FOR "TODAS", RENDERIZA OS CARDS DIRETAMENTE SEM AGRUPAR POR RUA
-            if (filtroRua === "TODAS") {
-                itensFiltrados.forEach(item => {
-                    const id = item.id || item.ID || "";
-                    const codigo = item.codigo || item["Código de Barras"] || "SEM CÓDIGO";
-                    const locacao = item.locacao || item["Locação"] || "S/L";
-                    const foto = item.foto || item["Foto do produto"] || "";
-                    const obs = item.obs || item["OBS ADICIONAL"] || "";
-
-                    const card = document.createElement('div');
-                    if (modoVisaoCompacto) {
-                        card.className = "glass-card border border-slate-700/80 rounded-lg p-2.5 flex items-center justify-between gap-2 shadow-sm text-xs";
-                        card.innerHTML = `
-                            <div class="flex items-center gap-2 overflow-hidden flex-1">
-                                ${foto ? `<img src="${foto}" onclick="abrirFotoZoom('${foto}')" class="w-7 h-7 rounded object-cover border border-slate-700 cursor-pointer flex-shrink-0">` : `<div class="w-7 h-7 rounded bg-slate-900 border border-slate-800 flex items-center justify-center text-gray-600 flex-shrink-0"><i class="fa-solid fa-box text-[10px]"></i></div>`}
-                                <span onclick="copiarTexto('${locacao}')" title="Copiar" class="selectable-text bg-atag-accent/20 border border-atag-accent/40 text-atag-accent text-[10px] font-black px-1.5 py-0.5 rounded flex-shrink-0 cursor-pointer">${locacao}</span>
-                                <span onclick="copiarTexto('${codigo}')" title="Copiar" class="selectable-text font-mono font-bold text-white truncate cursor-pointer hover:text-atag-accent">${codigo}</span>
-                                ${obs ? `<span class="text-[10px] text-gray-400 truncate hidden sm:inline">(${obs})</span>` : ''}
-                            </div>
-                            ${id ? `<div class="flex items-center gap-1 flex-shrink-0"><button onclick="abrirModalEditar('${id}', '${codigo}', '${locacao}', '${obs}', '${foto}')" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-gray-300 flex items-center justify-center text-[10px]"><i class="fa-solid fa-pen"></i></button><button onclick="excluirItem('${id}')" class="w-6 h-6 rounded bg-red-500/10 hover:bg-red-500/20 text-red-400 flex items-center justify-center text-[10px]"><i class="fa-solid fa-trash"></i></button></div>` : ''}
-                        `;
-                    } else {
-                        card.className = "glass-card border border-slate-700/80 rounded-xl p-3 flex items-center justify-between gap-3 shadow-md";
-                        card.innerHTML = `
-                            <div class="flex items-center gap-3 overflow-hidden">
-                                ${foto ? `<img src="${foto}" onclick="abrirFotoZoom('${foto}')" class="w-10 h-10 rounded-lg object-cover border border-slate-700 cursor-pointer flex-shrink-0">` : `<div class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-gray-600 flex-shrink-0"><i class="fa-solid fa-box text-sm"></i></div>`}
-                                <div class="truncate">
-                                    <span onclick="copiarTexto('${locacao}')" title="Copiar" class="selectable-text bg-atag-accent/20 border border-atag-accent/40 text-atag-accent text-[10px] font-black px-1.5 py-0.5 rounded cursor-pointer">${locacao}</span>
-                                    <p onclick="copiarTexto('${codigo}')" title="Copiar" class="selectable-text font-mono font-extrabold text-xs text-white truncate mt-1 cursor-pointer hover:text-atag-accent">${codigo}</p>
-                                    ${obs ? `<p class="text-[10px] text-gray-400 truncate mt-0.5"><i class="fa-solid fa-comment text-slate-500 mr-1"></i>${obs}</p>` : ''}
-                                </div>
-                            </div>
-                            ${id ? `<div class="flex items-center gap-1 flex-shrink-0"><button onclick="abrirModalEditar('${id}', '${codigo}', '${locacao}', '${obs}', '${foto}')" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-gray-300 flex items-center justify-center text-xs"><i class="fa-solid fa-pen"></i></button><button onclick="excluirItem('${id}')" class="w-7 h-7 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 flex items-center justify-center text-xs"><i class="fa-solid fa-trash"></i></button></div>` : ''}
-                        `;
-                    }
-                    container.appendChild(card);
-                });
-            } else {
-                // SE HOUVER UMA RUA ESPECÍFICA SELECIONADA, AGRUPA E EXIBE EM ACORDEÃO
-                let gruposRuas = {};
-                itensFiltrados.forEach(item => {
-                    const loc = item.locacao || item["Locação"] || "S/L";
-                    const rua = loc.split("-")[0] || "GERAL";
-                    if (!gruposRuas[rua]) gruposRuas[rua] = [];
-                    gruposRuas[rua].push(item);
+            if (filtroStatus === "SEM_DADOS") {
+                let grupos = {};
+                itens.forEach(i => {
+                    const fornecedor = (i.origem || i["Emitente (Razão Social)"] || "FORNECEDOR NÃO INFORMADO").toUpperCase().trim();
+                    const cnpj = i.cnpj || i["CNPJ Destinatário"] || "09.253.819/0001-35";
+                    if (!grupos[fornecedor]) grupos[fornecedor] = {};
+                    if (!grupos[fornecedor][cnpj]) grupos[fornecedor][cnpj] = [];
+                    grupos[fornecedor][cnpj].push(i);
                 });
 
-                Object.keys(gruposRuas).sort().forEach(rua => {
-                    const itensRua = gruposRuas[rua];
-                    const isRecolhido = ruasRecolhidas[rua] !== undefined ? ruasRecolhidas[rua] : false;
-
-                    const grupoDiv = document.createElement('div');
-                    grupoDiv.className = "glass-card border border-slate-700/80 rounded-xl overflow-hidden shadow-lg";
-
-                    const headerRua = document.createElement('div');
-                    headerRua.className = "bg-slate-800/90 hover:bg-slate-800 border-b border-slate-700/80 p-3 px-4 flex items-center justify-between cursor-pointer select-none transition-colors";
-                    headerRua.onclick = () => toggleAcordeaoRua(rua);
-                    headerRua.innerHTML = `
-                        <div class="flex items-center gap-2.5">
-                            <i id="icon-rua-${rua}" class="fa-solid ${isRecolhido ? 'fa-chevron-right' : 'fa-chevron-down'} text-atag-accent text-xs transition-transform"></i>
-                            <span class="font-black text-xs text-white uppercase tracking-wider">RUA ${rua}</span>
-                            <span class="bg-slate-900 text-atag-accent font-bold text-[10px] px-2 py-0.5 rounded-full border border-slate-700">${itensRua.length} ${itensRua.length === 1 ? 'item' : 'itens'}</span>
+                Object.keys(grupos).sort().forEach(forn => {
+                    const blocForn = document.createElement('div');
+                    blocForn.className = "flex flex-col gap-2 mt-1 mb-3";
+                    let htmlForn = `
+                        <div class="bg-slate-900 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-black text-atag-accent uppercase tracking-wider flex items-center justify-between shadow">
+                            <span><i class="fa-solid fa-boxes-packing mr-1.5 text-amber-400"></i> ${forn}</span>
+                            <span class="text-[10px] text-gray-400 font-bold">${Object.values(grupos[forn]).flat().length} NOTAS</span>
                         </div>
-                        <span id="text-status-rua-${rua}" class="text-[10px] text-gray-400 font-medium">${isRecolhido ? 'Expandir' : 'Recolher'}</span>
                     `;
-                    grupoDiv.appendChild(headerRua);
+                    blocForn.innerHTML = htmlForn;
 
-                    const conteudoRua = document.createElement('div');
-                    conteudoRua.id = `content-rua-${rua}`;
-                    conteudoRua.className = `accordion-content flex flex-col gap-2 p-2.5 bg-slate-950/40 ${isRecolhido ? '' : 'expanded'}`;
-
-                    itensRua.forEach(item => {
-                        const id = item.id || item.ID || "";
-                        const codigo = item.codigo || item["Código de Barras"] || "SEM CÓDIGO";
-                        const locacao = item.locacao || item["Locação"] || "S/L";
-                        const foto = item.foto || item["Foto do produto"] || "";
-                        const obs = item.obs || item["OBS ADICIONAL"] || "";
-
-                        const card = document.createElement('div');
-                        if (modoVisaoCompacto) {
-                            card.className = "glass-card border border-slate-700/80 rounded-lg p-2 flex items-center justify-between gap-2 shadow-sm text-xs";
-                            card.innerHTML = `
-                                <div class="flex items-center gap-2 overflow-hidden flex-1">
-                                    ${foto ? `<img src="${foto}" onclick="abrirFotoZoom('${foto}')" class="w-7 h-7 rounded object-cover border border-slate-700 cursor-pointer flex-shrink-0">` : `<div class="w-7 h-7 rounded bg-slate-900 border border-slate-800 flex items-center justify-center text-gray-600 flex-shrink-0"><i class="fa-solid fa-box text-[10px]"></i></div>`}
-                                    <span onclick="copiarTexto('${locacao}')" title="Copiar" class="selectable-text bg-atag-accent/20 border border-atag-accent/40 text-atag-accent text-[10px] font-black px-1.5 py-0.5 rounded flex-shrink-0 cursor-pointer">${locacao}</span>
-                                    <span onclick="copiarTexto('${codigo}')" title="Copiar" class="selectable-text font-mono font-bold text-white truncate cursor-pointer hover:text-atag-accent">${codigo}</span>
-                                    ${obs ? `<span class="text-[10px] text-gray-400 truncate hidden sm:inline">(${obs})</span>` : ''}
-                                </div>
-                                ${id ? `<div class="flex items-center gap-1 flex-shrink-0"><button onclick="abrirModalEditar('${id}', '${codigo}', '${locacao}', '${obs}', '${foto}')" class="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 text-gray-300 flex items-center justify-center text-[10px]"><i class="fa-solid fa-pen"></i></button><button onclick="excluirItem('${id}')" class="w-6 h-6 rounded bg-red-500/10 hover:bg-red-500/20 text-red-400 flex items-center justify-center text-[10px]"><i class="fa-solid fa-trash"></i></button></div>` : ''}
-                            `;
-                        } else {
-                            card.className = "glass-card border border-slate-700/80 rounded-xl p-2.5 flex items-center justify-between gap-3 shadow-md";
-                            card.innerHTML = `
-                                <div class="flex items-center gap-2.5 overflow-hidden">
-                                    ${foto ? `<img src="${foto}" onclick="abrirFotoZoom('${foto}')" class="w-10 h-10 rounded-lg object-cover border border-slate-700 cursor-pointer flex-shrink-0">` : `<div class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-gray-600 flex-shrink-0"><i class="fa-solid fa-box text-sm"></i></div>`}
-                                    <div class="truncate">
-                                        <span onclick="copiarTexto('${locacao}')" title="Copiar" class="selectable-text bg-atag-accent/20 border border-atag-accent/40 text-atag-accent text-[10px] font-black px-1.5 py-0.5 rounded cursor-pointer">${locacao}</span>
-                                        <p onclick="copiarTexto('${codigo}')" title="Copiar" class="selectable-text font-mono font-extrabold text-xs text-white truncate mt-1 cursor-pointer hover:text-atag-accent">${codigo}</p>
-                                        ${obs ? `<p class="text-[10px] text-gray-400 truncate"><i class="fa-solid fa-comment text-slate-500 mr-1"></i>${obs}</p>` : ''}
-                                    </div>
-                                </div>
-                                ${id ? `<div class="flex items-center gap-1 flex-shrink-0"><button onclick="abrirModalEditar('${id}', '${codigo}', '${locacao}', '${obs}', '${foto}')" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-gray-300 flex items-center justify-center text-xs"><i class="fa-solid fa-pen"></i></button><button onclick="excluirItem('${id}')" class="w-7 h-7 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 flex items-center justify-center text-xs"><i class="fa-solid fa-trash"></i></button></div>` : ''}
-                            `;
-                        }
-                        conteudoRua.appendChild(card);
+                    Object.keys(grupos[forn]).sort().forEach(cnpj => {
+                        const filialNome = cnpj.includes("0002-16") ? "Filial (Campo Grande)" : "Matriz (Dourados)";
+                        const badgeColor = cnpj.includes("0002-16") ? "text-purple-400 border-purple-500/40" : "text-sky-400 border-sky-500/40";
+                        const subSec = document.createElement('div');
+                        subSec.className = "flex flex-col gap-2 pl-3 border-l-2 border-slate-800 ml-1";
+                        subSec.innerHTML = `<div class="text-[10px] font-bold ${badgeColor} uppercase tracking-wide flex items-center gap-1.5 pt-1"><i class="fa-solid fa-building"></i> ${filialNome} (${cnpj})</div>`;
+                        grupos[forn][cnpj].forEach(item => montarCardCarga(item, subSec, false));
+                        blocForn.appendChild(subSec);
                     });
 
-                    grupoDiv.appendChild(conteudoRua);
-                    container.appendChild(grupoDiv);
+                    container.appendChild(blocForn);
                 });
-            }
-        }
-
-        function atualizarContadores() {
-            document.getElementById('badge-estoque-count').innerText = baseDados.length;
-        }
-
-        function abrirModalEditar(id, codigo, locacao, obs, fotoAtual) {
-            document.getElementById('edit-id').value = id;
-            document.getElementById('edit-codigo').value = codigo;
-            const partes = locacao.split("-");
-            document.getElementById('edit-rua').value = partes[0] || "";
-            document.getElementById('edit-posicao').value = partes[1] || "";
-            document.getElementById('edit-obs').value = obs;
-            fotoEdicaoBase64 = fotoAtual || "";
-            document.getElementById('img-edit-preview').src = (fotoAtual && fotoAtual !== "undefined") ? fotoAtual : "";
-            document.getElementById('modal-editar').classList.remove('hidden');
-        }
-
-        function fecharModalEditar() { document.getElementById('modal-editar').classList.add('hidden'); }
-
-        async function salvarEdicaoItem() {
-            const id = document.getElementById('edit-id').value;
-            const codigo = document.getElementById('edit-codigo').value.trim().toUpperCase();
-            const rua = document.getElementById('edit-rua').value.trim().toUpperCase();
-            const pos = document.getElementById('edit-posicao').value.trim().padStart(3, '0');
-            const obs = document.getElementById('edit-obs').value.trim();
-            const locacao = `${rua}-${pos}`;
-
-            fecharModalEditar();
-            setOnlineStatus(false, "SALVANDO...");
-
-            try {
-                await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ action: "update", id: id, codigo: codigo, localizacao: rua, posicao: pos, locacao: locacao, foto: fotoEdicaoBase64, obs: obs })
-                });
-                tocarSom('sucesso');
-                carregarDadosServidor(false);
-            } catch (e) { tocarSom('alerta'); alert("Erro ao editar item."); }
-        }
-
-        async function excluirItem(id) {
-            if (!confirm("Deseja realmente excluir este lançamento?")) return;
-            setOnlineStatus(false, "EXCLUINDO...");
-            try {
-                await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ action: "delete", id: id })
-                });
-                tocarSom('sucesso');
-                carregarDadosServidor(false);
-            } catch (e) { tocarSom('alerta'); alert("Erro ao excluir item."); }
-        }
-
-        function mudarAba(aba) {
-            const viewColetar = document.getElementById('view-coletar');
-            const viewEstoque = document.getElementById('view-estoque');
-            const navColetar = document.getElementById('nav-coletar');
-            const navEstoque = document.getElementById('nav-estoque');
-
-            if (aba === 'coletar') {
-                viewColetar.classList.remove('hidden');
-                viewEstoque.classList.add('hidden');
-                navColetar.className = "py-2.5 rounded-xl font-bold text-xs flex flex-col items-center gap-1 bg-slate-800 text-atag-accent border border-atag-accent/40 shadow";
-                navEstoque.className = "py-2.5 rounded-xl font-bold text-xs flex flex-col items-center gap-1 text-gray-400 hover:bg-slate-800/50 transition-all relative";
-                focarInputCodigo();
             } else {
-                viewColetar.classList.add('hidden');
-                viewEstoque.classList.remove('hidden');
-                navEstoque.className = "py-2.5 rounded-xl font-bold text-xs flex flex-col items-center gap-1 bg-slate-800 text-atag-accent border border-atag-accent/40 shadow relative";
-                navColetar.className = "py-2.5 rounded-xl font-bold text-xs flex flex-col items-center gap-1 text-gray-400 hover:bg-slate-800/50 transition-all";
-                renderizarEstoque();
+                itens.forEach(i => montarCardCarga(i, container, false));
             }
         }
 
-        function abrirFotoZoom(src) {
-            document.getElementById('img-zoom').src = src;
-            document.getElementById('modal-foto').classList.remove('hidden');
+        function renderizarHistorico() {
+            const container = document.getElementById('lista-historico');
+            const search = norm(document.getElementById('search-historico').value);
+            container.innerHTML = "";
+
+            let itens = baseCargas.filter(i => {
+                const statusEntregue = String(i.status || i["Entregue? (checkbox)"] || "").toUpperCase();
+                if (statusEntregue !== "TRUE" && statusEntregue !== "SIM" && statusEntregue !== "ENTREGUE") return false;
+
+                const nf = String(i.nota || i["Número da NF"] || i.nf || "");
+                const emitente = norm(i.origem || i["Emitente (Razão Social)"] || "");
+                const transp = norm(i.transportadora || i["TRANSPORTADORA"] || i["Transp."] || i["Transportadora"] || "");
+                return norm(nf).includes(search) || emitente.includes(search) || transp.includes(search);
+            });
+
+            document.getElementById('total-historico-contador').innerText = `${itens.length} ENTREGUES`;
+
+            if (itens.length === 0) {
+                container.innerHTML = `<div class="p-6 text-center text-gray-500 font-bold text-xs uppercase">Nenhum histórico encontrado.</div>`;
+                return;
+            }
+
+            itens.forEach(i => montarCardCarga(i, container, true));
         }
 
-        function fecharModalFoto() { document.getElementById('modal-foto').classList.add('hidden'); }
+        function montarCardCarga(i, container, isHistorico) {
+            const id = i.id || i["ID_Registro"];
+            const nf = i.nota || i["Número da NF"] || i.nf || "S/N";
+            const emitente = i.origem || i["Emitente (Razão Social)"] || "Fornecedor";
+            const transpNome = i.transportadora || i["TRANSPORTADORA"] || i["Transp."] || i["Transportadora"] || "";
+            
+            const transpInfo = baseTransp.find(t => norm(t.nome || t["TRANSPORTADORA"] || t["Transportadora"]) === norm(transpNome)) || {};
+            const site = i.link || i.site || i["SITE"] || i["Site"] || transpInfo.link || transpInfo["SITE"] || transpInfo["Site"] || "";
+            const fone = i.telefone || transpInfo.telefone || transpInfo["TELEFONE"] || transpInfo["Telefone"] || "Não informado";
+            const whats = i.whatsapp || i.whats || transpInfo.whatsapp || transpInfo["WHATSAPP"] || transpInfo["WHATS"] || fone;
+            const cnpj = i.cnpj || i["CNPJ Destinatário"] || "09.253.819/0001-35";
+            const obsText = i.obs || i["OBSERVAÇÕES"] || i["Observações"] || "";
+
+            let dataFormatada = "";
+            let dataInputFormat = "";
+            const rawPrevisao = i.previsao || i["Previsão Entrega"] || i["Previsao Entrega"] || i["Previsão"] || i["Previsao"] || "";
+            if (rawPrevisao) {
+                let dStr = String(rawPrevisao).trim();
+                if (dStr.includes("/")) {
+                    const parts = dStr.split("/");
+                    if (parts.length === 3) {
+                        dataFormatada = `${parts[0]}/${parts[1]}/${parts[2]}`;
+                        dataInputFormat = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                    } else dataFormatada = dStr;
+                } else if (dStr.includes("-")) {
+                    const p = dStr.split("-");
+                    if (p.length === 3) {
+                        dataFormatada = `${p[2]}/${p[1]}/${p[0]}`;
+                        dataInputFormat = `${p[0]}-${p[1]}-${p[2]}`;
+                    } else dataFormatada = dStr;
+                }
+            }
+
+            let statusAtualTexto = "EM TRÂNSITO";
+            let borderColor = "border-l-amber-500";
+            let badgeStatusClass = "bg-amber-500/20 text-amber-400 border-amber-500/40";
+            let glowRiscoClass = "";
+            
+            if (isHistorico) {
+                borderColor = "border-l-emerald-500";
+            } else {
+                let isAtrasado = false;
+                if (dataFormatada) {
+                    const parts = dataFormatada.split("/");
+                    if (parts.length === 3) {
+                        if (new Date(parts[2], parts[1] - 1, parts[0]) < new Date().setHours(0,0,0,0)) isAtrasado = true;
+                    }
+                }
+                const statusCampo = String(i.status || "").toUpperCase();
+                if (isAtrasado || statusCampo.includes("PENDENTE") || statusCampo.includes("ATRASADA")) {
+                    statusAtualTexto = "PENDENTE / ATRASADA";
+                    borderColor = "border-l-atag-red";
+                    badgeStatusClass = "bg-atag-red/20 text-atag-red border-atag-red/40 animate-pulse";
+                    glowRiscoClass = "shadow-[0_0_15px_rgba(229,62,62,0.22)] border-red-500/40";
+                }
+            }
+
+            let filialLabel = "Matriz (Dourados)";
+            let cnpjBadgeClass = "bg-sky-500/20 text-sky-300 border-sky-500/40";
+            if (String(cnpj).includes("0002-16")) {
+                filialLabel = "Filial (Campo Grande)";
+                cnpjBadgeClass = "bg-purple-500/20 text-purple-300 border-purple-500/40";
+            }
+
+            let optionsTransp = '<option value="">Selecione Transportadora...</option>';
+            baseTransp.forEach(t => {
+                const nomeT = (t.nome || t["TRANSPORTADORA"] || t["Transportadora"] || "").trim();
+                if (nomeT) {
+                    const selected = norm(nomeT) === norm(transpNome) ? 'selected' : '';
+                    optionsTransp += `<option value="${nomeT}" ${selected}>${nomeT}</option>`;
+                }
+            });
+
+            const card = document.createElement('div');
+            card.className = `glass-card border border-atag-border border-l-4 ${borderColor} ${glowRiscoClass} rounded-xl p-2.5 flex flex-col gap-2 shadow-lg animate-fade-in`;
+
+            card.innerHTML = `
+                <div class="flex justify-between items-start gap-2">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <input type="checkbox" value="${id}" class="chk-carga w-3.5 h-3.5 accent-atag-red rounded">
+                        <span onclick="copiarTexto('${nf}', 'NF')" class="cursor-pointer bg-atag-accent/20 hover:bg-atag-accent/30 border border-atag-accent/40 text-atag-accent font-mono font-black text-xs px-2 py-0.5 rounded" title="Clique para copiar a NF">NF: ${nf} <i class="fa-regular fa-copy ml-0.5 text-[10px]"></i></span>
+                        <span class="bg-slate-800 text-slate-100 font-bold text-xs px-2.5 py-0.5 rounded border border-slate-700 uppercase tracking-wide truncate max-w-[200px]" title="${emitente}">${emitente}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-[9px] font-bold px-1.5 py-0.5 rounded border ${isHistorico ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' : badgeStatusClass}">
+                            ${isHistorico ? 'ENTREGUE' : statusAtualTexto}
+                        </span>
+                        <button onclick='prepararEdicao(${JSON.stringify(i)})' class="text-sky-400 hover:text-sky-300 text-xs p-1" title="Editar Completo"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button onclick="excluirCarga('${id}')" class="text-gray-500 hover:text-red-400 text-xs p-1" title="Excluir"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px] text-gray-300 bg-slate-900/60 p-2 rounded border border-slate-800 items-center">
+                    <div class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-calendar-days text-atag-accent"></i> 
+                        <b class="text-gray-400 whitespace-nowrap">Entrega:</b> 
+                        <input type="date" value="${dataInputFormat}" onchange="salvarEdicaoRapida('${id}', 'previsao', this.value)" class="bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 text-xs text-white font-bold w-full focus:border-sky-400">
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-building text-atag-accent mr-1"></i> 
+                        <b class="text-gray-400">CNPJ:</b> 
+                        <span onclick="copiarTexto('${cnpj}', 'CNPJ')" class="cursor-pointer border px-1.5 py-0.2 rounded font-bold ${cnpjBadgeClass} hover:opacity-80 inline-flex items-center gap-1" title="Clique para copiar o CNPJ">
+                            ${cnpj} (${filialLabel}) <i class="fa-regular fa-copy"></i>
+                        </span>
+                    </div>
+                </div>
+
+                ${obsText ? `<div class="text-[10px] text-gray-300 bg-slate-900/40 px-2 py-1 rounded border border-slate-800/80"><i class="fa-solid fa-comment text-amber-400 mr-1"></i> <b class="text-gray-400">Obs:</b> ${obsText}</div>` : ''}
+
+                <div class="text-[10px] text-gray-300 bg-slate-950/50 p-2 rounded border border-slate-800 flex flex-wrap justify-between items-center gap-2">
+                    <div class="flex items-center gap-1.5 flex-1 min-w-[200px]">
+                        <i class="fa-solid fa-truck text-atag-accent"></i> 
+                        <b class="text-gray-400">Transp:</b>
+                        <select onchange="salvarEdicaoRapida('${id}', 'transportadora', this.value)" class="bg-slate-900 border border-slate-700 rounded px-2 py-1 text-xs font-bold text-white uppercase w-full focus:border-sky-400">
+                            ${optionsTransp}
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        ${fone && fone !== "Não informado" ? `
+                        <span onclick="copiarTexto('${fone}', 'Telefone')" class="cursor-pointer bg-slate-900 hover:bg-slate-800 border border-slate-700 text-gray-200 px-2 py-0.5 rounded font-mono font-bold flex items-center gap-1" title="Clique para copiar o Telefone">
+                            <i class="fa-solid fa-phone text-atag-accent"></i> ${fone} <i class="fa-regular fa-copy text-[9px] text-gray-400"></i>
+                        </span>` : ''}
+                        ${whats && whats !== "Não informado" ? `
+                        <span onclick="copiarTexto('${whats}', 'WhatsApp')" class="cursor-pointer bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-500/30 text-emerald-300 px-2 py-0.5 rounded font-mono font-bold flex items-center gap-1" title="Clique para copiar o WhatsApp">
+                            <i class="fa-brands fa-whatsapp text-emerald-400"></i> ${whats} <i class="fa-regular fa-copy text-[9px] text-emerald-400"></i>
+                        </span>` : ''}
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-1 border-t border-slate-800 text-xs">
+                    <div>
+                        ${site ? `<a href="${site}" target="_blank" class="text-atag-accent hover:underline font-bold text-[10px] flex items-center gap-1"><i class="fa-solid fa-globe"></i> Rastreio Site</a>` : ''}
+                    </div>
+                    <label class="flex items-center gap-1.5 cursor-pointer bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+                        <input type="checkbox" ${isHistorico ? 'checked' : ''} onchange="toggleEntrega('${id}', this.checked)" class="w-3 h-3 accent-emerald-500">
+                        <span class="text-[10px] font-bold ${isHistorico ? 'text-emerald-400' : 'text-gray-300'}">Marcar Entregue</span>
+                    </label>
+                </div>
+            `;
+
+            container.appendChild(card);
+        }
+
+        async function salvarEdicaoRapida(id, campo, valor) {
+            const item = baseCargas.find(i => String(i.id || i["ID_Registro"]) === String(id));
+            if (!item) return;
+
+            const fornecedorTarget = norm(item.origem || item["Emitente (Razão Social)"] || "");
+            const cnpjTarget = String(item.cnpj || item["CNPJ Destinatário"] || "");
+            let cargasParaAtualizar = [item];
+
+            if (campo === 'transportadora' && fornecedorTarget) {
+                cargasParaAtualizar = baseCargas.filter(i => {
+                    const statusEntregue = String(i.status || i["Entregue? (checkbox)"] || "").toUpperCase();
+                    if (statusEntregue === "TRUE" || statusEntregue === "SIM" || statusEntregue === "ENTREGUE") return false;
+                    const origemItem = norm(i.origem || i["Emitente (Razão Social)"] || "");
+                    const cnpjItem = String(i.cnpj || i["CNPJ Destinatário"] || "");
+                    return origemItem === fornecedorTarget && cnpjItem.includes(cnpjTarget);
+                });
+            }
+
+            const transpObj = baseTransp.find(t => norm(t.nome || t["TRANSPORTADORA"] || t["Transportadora"]) === norm(valor)) || {};
+            const novoSite = transpObj.link || transpObj["SITE"] || transpObj["Site"] || "";
+            const novoFone = transpObj.telefone || transpObj["TELEFONE"] || transpObj["Telefone"] || "";
+            const novoWhats = transpObj.whatsapp || transpObj["WHATSAPP"] || transpObj["WHATS"] || novoFone;
+
+            cargasParaAtualizar.forEach(c => {
+                if (campo === 'transportadora') {
+                    c.transportadora = valor;
+                    c["TRANSPORTADORA"] = valor;
+                    if (novoSite) c.site = novoSite;
+                    if (novoFone) c.telefone = novoFone;
+                    if (novoWhats) c.whatsapp = novoWhats;
+                } else if (campo === 'previsao') {
+                    c.previsao = valor;
+                    c["Previsão Entrega"] = valor;
+                }
+            });
+
+            salvarCacheLocal('cargas', baseCargas);
+            renderizarCargas();
+
+            const toast = document.getElementById('toast-copia');
+            toast.innerText = `Atualizando ${cargasParaAtualizar.length} registro(s)... ⏳`;
+            toast.classList.remove('hidden');
+
+            try {
+                for (let c of cargasParaAtualizar) {
+                    const cId = c.id || c["ID_Registro"];
+                    const payload = {
+                        action: "updateFollowUp",
+                        modulo: "followup",
+                        id: cId,
+                        ID_Registro: cId,
+                        transportadora: c.transportadora,
+                        previsao: c.previsao,
+                        site: c.site,
+                        telefone: c.telefone,
+                        whatsapp: c.whatsapp
+                    };
+                    await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload)
+                    });
+                }
+                toast.innerText = `Atualizado com sucesso! ✓`;
+                setTimeout(() => toast.classList.add('hidden'), 2500);
+                atualizarEstatisticas();
+            } catch(e) {
+                toast.innerText = `Erro ao salvar alterações no servidor.`;
+                setTimeout(() => toast.classList.add('hidden'), 2500);
+            }
+        }
+
+        async function abrirRelatorioImpressao(isHistorico) {
+            relatorioHistoricoAtual = isHistorico;
+            document.getElementById('filtro-relatorio-filial').value = "TODAS";
+            document.getElementById('filtro-relatorio-data-inicio').value = "";
+            document.getElementById('filtro-relatorio-data-fim').value = "";
+            document.getElementById('modal-relatorio-a4').classList.remove('hidden');
+            await atualizarVisualizacaoRelatorioA4();
+        }
+
+        function limparFiltroDataRelatorio() {
+            document.getElementById('filtro-relatorio-data-inicio').value = "";
+            document.getElementById('filtro-relatorio-data-fim').value = "";
+            atualizarVisualizacaoRelatorioA4();
+        }
+
+        async function atualizarVisualizacaoRelatorioA4() {
+            const containerConteudo = document.getElementById('relatorio-a4-conteudo');
+            const filialSelecionada = document.getElementById('filtro-relatorio-filial').value;
+            const dataInicioVal = document.getElementById('filtro-relatorio-data-inicio').value;
+            const dataFimVal = document.getElementById('filtro-relatorio-data-fim').value;
+            const dataAtual = new Date().toLocaleDateString('pt-BR');
+            const tituloRelatorio = relatorioHistoricoAtual ? "RELATÓRIO DE HISTÓRICO DE ENTREGAS POR PERÍODO" : "RELATÓRIO DE CARGAS EM TRÂNSITO";
+
+            containerConteudo.innerHTML = `<div class="p-12 text-center text-slate-500 font-bold text-xs uppercase animate-pulse">Carregando relatório no servidor... ⏳</div>`;
+
+            let itensFiltrados = [];
+            try {
+                const queryParams = new URLSearchParams({
+                    action: 'relatorioFiltrado',
+                    historico: relatorioHistoricoAtual,
+                    cnpj: filialSelecionada,
+                    dtInicio: dataInicioVal,
+                    dtFim: dataFimVal
+                });
+                const res = await fetch(`${WEB_APP_URL}?${queryParams.toString()}`);
+                itensFiltrados = await res.json();
+            } catch(e) {
+                itensFiltrados = [];
+            }
+
+            if (!Array.isArray(itensFiltrados) || itensFiltrados.length === 0) {
+                containerConteudo.innerHTML = `
+                    <div class="flex justify-between items-center border-b-2 border-slate-800 pb-4 mb-4">
+                        <div class="flex items-center gap-3">
+                            <img src="atag_logo.png" alt="Logo ATAG" class="h-10 w-auto object-contain">
+                            <div>
+                                <h2 class="text-sm font-black text-slate-900 uppercase tracking-wide">ATAG Distribuidora de Auto Peças</h2>
+                                <p class="text-[10px] text-slate-600 font-medium">Gestão de Cargas & Transportes - Dourados / MS</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[10px] font-bold text-slate-500 uppercase block">Data de Emissão</span>
+                            <span class="text-xs font-mono font-bold text-slate-900">${dataAtual}</span>
+                        </div>
+                    </div>
+                    <div class="p-12 text-center text-slate-500 font-bold text-xs uppercase">Nenhum registro encontrado para os filtros selecionados.</div>
+                `;
+                return;
+            }
+
+            itensFiltrados.sort((a, b) => {
+                const fornecA = String(a.origem || a["Emitente (Razão Social)"] || "").toUpperCase().trim();
+                const fornecB = String(b.origem || b["Emitente (Razão Social)"] || "").toUpperCase().trim();
+                if (fornecA !== fornecB) return fornecA.localeCompare(fornecB);
+                const nfA = parseFloat(a.nota || a["Número da NF"] || a.nf || 0) || 0;
+                const nfB = parseFloat(b.nota || b["Número da NF"] || b.nf || 0) || 0;
+                return nfA - nfB;
+            });
+
+            let linhasTabelaHtml = "";
+            itensFiltrados.forEach((i, index) => {
+                const nf = i.nota || i["Número da NF"] || i.nf || "S/N";
+                const emitente = i.origem || i["Emitente (Razão Social)"] || "Fornecedor";
+                const cnpj = i.cnpj || i["CNPJ Destinatário"] || "09.253.819/0001-35";
+                
+                let dataExibicao = "-";
+                if (relatorioHistoricoAtual) {
+                    const rawBaixa = i.dataBaixa || i["DataBaixa"] || i.dataConclusao || "";
+                    if (rawBaixa) {
+                        const p = rawBaixa.split("-");
+                        dataExibicao = p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : rawBaixa;
+                    }
+                } else {
+                    const rawPrevisao = i.previsao || i["Previsão Entrega"] || "";
+                    if (rawPrevisao.includes("-")) {
+                        const p = rawPrevisao.split("-");
+                        dataExibicao = p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : rawPrevisao;
+                    } else dataExibicao = rawPrevisao;
+                }
+
+                const obs = i.obs || i["OBSERVAÇÕES"] || i["Observações"] || "-";
+
+                linhasTabelaHtml += `
+                    <tr class="border-b border-slate-300 text-[10px]">
+                        <td class="p-1.5 font-mono font-bold text-center">${index + 1}</td>
+                        <td class="p-1.5 font-mono font-bold text-slate-900 whitespace-nowrap">${nf}</td>
+                        <td class="p-1.5 uppercase font-semibold">${emitente}</td>
+                        <td class="p-1.5 text-center font-semibold whitespace-nowrap text-emerald-700">${dataExibicao}</td>
+                        <td class="p-1.5 font-mono text-center whitespace-nowrap">${cnpj}</td>
+                        <td class="p-1.5 text-slate-700 italic">${obs}</td>
+                    </tr>
+                `;
+            });
+
+            let filialNomeExibicao = "Todas as Filiais";
+            if (filialSelecionada.includes("0001-35")) filialNomeExibicao = "Matriz (Dourados)";
+            else if (filialSelecionada.includes("0002-16")) filialNomeExibicao = "Filial (Campo Grande)";
+
+            let textoPeriodo = "Todos";
+            if (dataInicioVal || dataFimVal) {
+                const fmtIni = dataInicioVal ? dataInicioVal.split("-").reverse().join("/") : "Início";
+                const fmtFim = dataFimVal ? dataFimVal.split("-").reverse().join("/") : "Atual";
+                textoPeriodo = `${fmtIni} até ${fmtFim}`;
+            }
+
+            containerConteudo.innerHTML = `
+                <div class="flex justify-between items-center border-b-2 border-slate-800 pb-3 mb-3">
+                    <div class="flex items-center gap-3">
+                        <img src="atag_logo.png" alt="Logo ATAG" class="h-10 w-auto object-contain">
+                        <div>
+                            <h2 class="text-sm font-black text-slate-900 uppercase tracking-wide">ATAG Distribuidora de Auto Peças</h2>
+                            <p class="text-[10px] text-slate-600 font-medium">Gestão de Cargas & Transportes - Dourados / MS</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase block">Data de Emissão</span>
+                        <span class="text-xs font-mono font-bold text-slate-900">${dataAtual}</span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-100 border border-slate-300 p-2 rounded text-center mb-3">
+                    <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest">${tituloRelatorio}</h3>
+                    <p class="text-[10px] text-slate-600 font-semibold mt-0.5">Filial: ${filialNomeExibicao} | Período: ${textoPeriodo} | Total: ${itensFiltrados.length}</p>
+                </div>
+
+                <table class="w-full text-left border-collapse mb-6">
+                    <thead>
+                        <tr class="bg-slate-800 text-white text-[9px] uppercase font-bold">
+                            <th class="p-1.5 text-center w-7">#</th>
+                            <th class="p-1.5 w-20">Nota Fiscal</th>
+                            <th class="p-1.5">Fornecedor</th>
+                            <th class="p-1.5 text-center w-28">${relatorioHistoricoAtual ? 'Data da Baixa' : 'Previsão Entrega'}</th>
+                            <th class="p-1.5 text-center w-32">CNPJ Destinatário</th>
+                            <th class="p-1.5">Observação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${linhasTabelaHtml}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function fecharRelatorioA4() {
+            document.getElementById('modal-relatorio-a4').classList.add('hidden');
+        }
+
+        function prepararEdicao(item) {
+            mudarAba('cargas');
+            document.getElementById('reg-id-edicao').value = item.id || item["ID_Registro"] || "";
+            document.getElementById('reg-nf').value = item.nota || item["Número da NF"] || item.nf || "";
+            document.getElementById('reg-origem').value = item.origem || item["Emitente (Razão Social)"] || "";
+            document.getElementById('reg-cnpj').value = item.cnpj || item["CNPJ Destinatário"] || "09.253.819/0001-35";
+            
+            const transpNome = item.transportadora || item["TRANSPORTADORA"] || "";
+            document.getElementById('reg-transp').value = transpNome;
+
+            const transpInfo = baseTransp.find(t => norm(t.nome || t["TRANSPORTADORA"] || t["Transportadora"]) === norm(transpNome)) || {};
+            
+            document.getElementById('reg-site').value = item.link || item.site || item["SITE"] || transpInfo.link || transpInfo["SITE"] || transpInfo["Site"] || "";
+            document.getElementById('reg-fone').value = item.telefone || item["TELEFONE"] || transpInfo.telefone || transpInfo["TELEFONE"] || transpInfo["Telefone"] || "";
+            document.getElementById('reg-whats').value = item.whatsapp || item.whats || item["WHATS"] || transpInfo.whatsapp || transpInfo["WHATSAPP"] || transpInfo["WHATS"] || "";
+            
+            const prevOriginal = item.previsao || item["Previsão Entrega"] || "";
+            if (prevOriginal.includes("/")) {
+                const parts = prevOriginal.split("/");
+                if (parts.length === 3) document.getElementById('reg-previsao').value = `${parts[2]}-${parts[1]}-${parts[0]}`;
+            } else {
+                document.getElementById('reg-previsao').value = prevOriginal;
+            }
+
+            document.getElementById('reg-obs').value = item.obs || item["OBSERVAÇÕES"] || "";
+            calcularStatusAutomaticoFormulario();
+
+            document.getElementById('form-titulo').innerHTML = `<i class="fa-solid fa-pen-to-square text-sky-400"></i> Editar Carga`;
+            document.getElementById('form-badge').innerText = "EDIT";
+            document.getElementById('btn-salvar-carga').innerHTML = `<i class="fa-solid fa-floppy-disk mr-1"></i> Atualizar`;
+            document.getElementById('btn-cancelar-edicao').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function limparFormularioCarga() {
+            document.getElementById('reg-id-edicao').value = "";
+            document.getElementById('reg-nf').value = "";
+            document.getElementById('reg-origem').value = "";
+            document.getElementById('reg-site').value = "";
+            document.getElementById('reg-fone').value = "";
+            document.getElementById('reg-whats').value = "";
+            document.getElementById('reg-previsao').value = "";
+            document.getElementById('reg-obs').value = "";
+            document.getElementById('reg-transp').value = "";
+            document.getElementById('reg-status').value = "EM TRÂNSITO";
+
+            document.getElementById('form-titulo').innerHTML = `<i class="fa-solid fa-square-plus text-atag-accent"></i> Registrar Carga`;
+            document.getElementById('form-badge').innerText = "NOVO";
+            document.getElementById('btn-salvar-carga').innerHTML = `<i class="fa-solid fa-floppy-disk mr-1"></i> Salvar Carga`;
+            document.getElementById('btn-cancelar-edicao').classList.add('hidden');
+        }
+
+        async function salvarNovaCarga() {
+            const idEdicao = document.getElementById('reg-id-edicao').value.trim();
+            const nf = document.getElementById('reg-nf').value.trim();
+            const origem = document.getElementById('reg-origem').value.trim();
+            const cnpj = document.getElementById('reg-cnpj').value;
+            const transp = document.getElementById('reg-transp').value;
+            const site = document.getElementById('reg-site').value.trim();
+            const fone = document.getElementById('reg-fone').value.trim();
+            const whats = document.getElementById('reg-whats').value.trim();
+            const previsao = document.getElementById('reg-previsao').value;
+            
+            calcularStatusAutomaticoFormulario();
+            const status = document.getElementById('reg-status').value;
+            const obs = document.getElementById('reg-obs').value.trim();
+
+            if (!nf || !origem || !transp) {
+                alert("Preencha a NF, a Origem e selecione a Transportadora.");
+                return;
+            }
+
+            const fornecedorTarget = norm(origem);
+            const cnpjTarget = String(cnpj);
+            
+            let cargasParaAtualizar = baseCargas.filter(i => {
+                const statusEntregue = String(i.status || i["Entregue? (checkbox)"] || "").toUpperCase();
+                if (statusEntregue === "TRUE" || statusEntregue === "SIM" || statusEntregue === "ENTREGUE") return false;
+                const origemItem = norm(i.origem || i["Emitente (Razão Social)"] || "");
+                const cnpjItem = String(i.cnpj || i["CNPJ Destinatário"] || "");
+                return origemItem === fornecedorTarget && cnpjItem.includes(cnpjTarget);
+            });
+
+            if (cargasParaAtualizar.length === 0 || !idEdicao) {
+                cargasParaAtualizar = [{ id: idEdicao, ID_Registro: idEdicao, nota: nf, origem: origem, cnpj: cnpj, transportadora: transp, site: site, telefone: fone, whatsapp: whats, previsao: previsao, status: status, obs: obs }];
+            } else {
+                cargasParaAtualizar.forEach(c => {
+                    c.transportadora = transp;
+                    c["TRANSPORTADORA"] = transp;
+                    if (site !== undefined) { c.site = site; c["SITE"] = site; }
+                    if (fone !== undefined) { c.telefone = fone; c["TELEFONE"] = fone; }
+                    if (whats !== undefined) { c.whatsapp = whats; c["WHATS"] = whats; }
+                    if (String(c.id || c["ID_Registro"]) === idEdicao) {
+                        c.nota = nf; c.cnpj = cnpj; c.previsao = previsao; c.status = status; c.obs = obs;
+                    }
+                });
+            }
+
+            let transpObj = baseTransp.find(t => norm(t.nome || t["TRANSPORTADORA"] || t["Transportadora"]) === norm(transp));
+            if (transpObj) {
+                transpObj.link = site; transpObj["SITE"] = site;
+                transpObj.telefone = fone; transpObj["TELEFONE"] = fone;
+                transpObj.whatsapp = whats; transpObj["WHATSAPP"] = whats;
+            } else if (transp) {
+                baseTransp.push({ nome: transp, link: site, telefone: fone, whatsapp: whats });
+                preencherSelectTransportadoras();
+            }
+
+            salvarCacheLocal('cargas', baseCargas);
+            salvarCacheLocal('transp', baseTransp);
+            renderizarCargas();
+            renderizarTransportadoras();
+
+            const toast = document.getElementById('toast-copia');
+            toast.innerText = `Salvando e atualizando dados... ⏳`;
+            toast.classList.remove('hidden');
+
+            try {
+                if (transp) {
+                    await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({ action: "insertTransportadora", modulo: "transportadoras", nome: transp, link: site, telefone: fone, whatsapp: whats })
+                    });
+                }
+
+                for (let c of cargasParaAtualizar) {
+                    const cId = c.id || c["ID_Registro"];
+                    const isNew = !cId;
+                    const payload = {
+                        action: isNew ? "insertFollowUp" : "updateFollowUp",
+                        modulo: "followup",
+                        id: cId,
+                        ID_Registro: cId,
+                        nf: c.nota || nf,
+                        nota: c.nota || nf,
+                        "Número da NF": c.nota || nf,
+                        origem: c.origem || origem,
+                        emitente: c.origem || origem,
+                        "Emitente (Razão Social)": c.origem || origem,
+                        cnpj: c.cnpj || cnpj,
+                        "CNPJ Destinatário": c.cnpj || cnpj,
+                        transportadora: c.transportadora || transp,
+                        "TRANSPORTADORA": c.transportadora || transp,
+                        site: c.site !== undefined ? c.site : site,
+                        "SITE": c.site !== undefined ? c.site : site,
+                        telefone: c.telefone !== undefined ? c.telefone : fone,
+                        "TELEFONE": c.telefone !== undefined ? c.telefone : fone,
+                        whatsapp: c.whatsapp !== undefined ? c.whatsapp : whats,
+                        "WHATS": c.whatsapp !== undefined ? c.whatsapp : whats,
+                        previsao: c.previsao || previsao,
+                        "Previsão Entrega": c.previsao || previsao,
+                        status: c.status || status,
+                        obs: c.obs || obs,
+                        "OBSERVAÇÕES": c.obs || obs
+                    };
+                    await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload)
+                    });
+                }
+
+                toast.innerText = `Salvo com sucesso! ✓`;
+                setTimeout(() => toast.classList.add('hidden'), 2000);
+                limparFormularioCarga();
+                await carregarCargas(false);
+            } catch(e) {
+                toast.innerText = `Erro ao salvar no servidor.`;
+                setTimeout(() => toast.classList.add('hidden'), 2000);
+            }
+        }
+
+        async function toggleEntrega(id, status) {
+            const item = baseCargas.find(i => String(i.id || i["ID_Registro"]) === String(id));
+            if (item) {
+                item.status = status ? "ENTREGUE" : "EM TRÂNSITO";
+                item["Entregue? (checkbox)"] = status ? "TRUE" : "FALSE";
+                if (status) {
+                    const dataHojeIso = new Date().toISOString().split('T')[0];
+                    item.dataBaixa = dataHojeIso;
+                    salvarDataBaixaLocal(id, dataHojeIso);
+                } else {
+                    item.dataBaixa = "";
+                }
+                salvarCacheLocal('cargas', baseCargas);
+                atualizarEstatisticas();
+                renderizarCargas();
+                renderizarHistorico();
+            }
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: "updateFollowUp", modulo: "followup", id: id, ID_Registro: id, status: status ? "ENTREGUE" : "EM TRÂNSITO" })
+                });
+                carregarCargas(false);
+            } catch(e) { carregarCargas(false); }
+        }
+
+        async function excluirCarga(id) {
+            if (!confirm("Deseja realmente excluir este registro?")) return;
+            baseCargas = baseCargas.filter(i => String(i.id || i["ID_Registro"]) !== String(id));
+            salvarCacheLocal('cargas', baseCargas);
+            atualizarEstatisticas();
+            renderizarCargas();
+            renderizarHistorico();
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: "deleteFollowUp", modulo: "followup", id: id, ID_Registro: id })
+                });
+                carregarCargas(false);
+            } catch(e) { carregarCargas(false); }
+        }
+
+        async function apagarSelecionadas() {
+            const checks = document.querySelectorAll('.chk-carga:checked');
+            if (checks.length === 0) { alert("Selecione pelo menos uma carga."); return; }
+            if (!confirm(`Excluir as ${checks.length} cargas selecionadas?`)) return;
+            const idsParaExcluir = Array.from(checks).map(chk => String(chk.value));
+            baseCargas = baseCargas.filter(i => !idsParaExcluir.includes(String(i.id || i["ID_Registro"])));
+            salvarCacheLocal('cargas', baseCargas);
+            atualizarEstatisticas();
+            renderizarCargas();
+            renderizarHistorico();
+            for (let id of idsParaExcluir) {
+                try {
+                    await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify({ action: "deleteFollowUp", modulo: "followup", id: id, ID_Registro: id })
+                    });
+                } catch(e) {}
+            }
+            carregarCargas(false);
+        }
+
+        async function salvarTransportadora() {
+            const nome = document.getElementById('transp-nome').value.trim();
+            const site = document.getElementById('transp-site').value.trim();
+            const fone = document.getElementById('transp-fone').value.trim();
+            const whats = document.getElementById('transp-whats').value.trim();
+            if (!nome) { alert("Informe o nome da transportadora."); return; }
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: "insertTransportadora", modulo: "transportadoras", nome: nome, link: site, telefone: fone, whatsapp: whats })
+                });
+                document.getElementById('transp-nome').value = "";
+                document.getElementById('transp-site').value = "";
+                document.getElementById('transp-fone').value = "";
+                document.getElementById('transp-whats').value = "";
+                await carregarTransportadoras();
+                alert("Transportadora cadastrada com sucesso!");
+            } catch(e) { alert("Erro ao cadastrar."); }
+        }
+
+        function renderizarTransportadoras() {
+            const container = document.getElementById('lista-transp');
+            if (!container) return;
+            container.innerHTML = "";
+            baseTransp.forEach(t => {
+                const nome = t.name || t.nome || t["TRANSPORTADORA"] || t["Transportadora"] || "";
+                const site = t.link || t["SITE"] || t["Site"] || "";
+                const fone = t.telefone || t["TELEFONE"] || t["Telefone"] || "";
+                const whats = t.whatsapp || t["WHATSAPP"] || t["WHATS"] || t["WhatsApp"] || fone;
+
+                const card = document.createElement('div');
+                card.className = "glass-card border border-atag-border rounded-xl p-2.5 flex flex-col gap-1.5 shadow";
+                card.innerHTML = `
+                    <h4 class="font-bold text-xs text-white uppercase">${nome}</h4>
+                    <div class="flex flex-col gap-0.5 text-[10px] text-gray-400">
+                        ${fone ? `<p onclick="copiarTexto('${fone}', 'Telefone')" class="cursor-pointer hover:text-white inline-flex items-center gap-1"><i class="fa-solid fa-phone text-atag-accent"></i> ${fone} <i class="fa-regular fa-copy text-[9px]"></i></p>` : ''}
+                        ` + (whats ? `<p onclick="copiarTexto('${whats}', 'WhatsApp')" class="cursor-pointer hover:text-emerald-300 inline-flex items-center gap-1"><i class="fa-brands fa-whatsapp text-emerald-400"></i> ${whats} <i class="fa-regular fa-copy text-[9px]"></i></p>` : '') + `
+                    </div>
+                    ${site ? `<a href="${site}" target="_blank" class="mt-1 bg-slate-900 hover:bg-slate-800 text-atag-accent border border-slate-700 py-1 rounded text-[10px] font-bold text-center block"><i class="fa-solid fa-arrow-up-right-from-square mr-1"></i>Portal de Rastreio</a>` : ''}
+                `;
+                container.appendChild(card);
+            });
+        }
     </script>
 </body>
 </html>
